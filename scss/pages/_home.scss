@@ -1,58 +1,13 @@
-@mixin flexCenter ($a, $j){
-    display: flex;
-    align-items: $a;
-    justify-content: $j;
-}
-
-* {
-    box-sizing: border-box;
-    border: solid 1px #646464;
-    font-family: Noto Sans TC;
-}
-
-html,body {
-    width: 100%;
-    font-family: Noto Sans TC;
-}
-
-
-.navbar {
-    @include flexCenter(center, space-between);
-    width: 100%;
-    height: 80px;
-    border-bottom: 1px solid #E5E5E5;
-    padding: 0 12%;
-    background-color: #00457C;
-    .logo {
-        width: 80%;
-    }
-    ul {
-        @include flexCenter(center, center);
-
-        li {
-            @include flexCenter(center, center);
-            padding: 0 12px;
-            a {
-                text-decoration:none;
-                font-size: 2.3vmin;
-                color: #FFFFFF;
-            }
-        }
-    }
-}
-
 .search-container {
     @include flexCenter(center, center);
-    width: 100%;
-    height: 450px;
+    @include size(450px, 100%);
     background-image: url('../images/top_bg.jpg');
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
     input {
+        @include size(56px, 40%);
         position: relative;
-        width: 40%;
-        height: 56px;
         border: none;
         border-radius: 24px;
         padding-left: 52px;
@@ -61,10 +16,9 @@ html,body {
         color: #BDBDBD;
     }
     input:before {
+        @include size(120px, 120px);
         content: '　';
         position: absolute;
-        width: 120px;
-        height: 120px;
         background-image: url('../images/Vector.png');
     }
 }
@@ -74,14 +28,11 @@ html,body {
     flex-direction: column;
     width: 100%;
     background-color: #E5E5E5;;
-
     .event {
         @include flexCenter(center, space-between);
-
         flex-wrap: wrap;
         width: 76%;
         padding: 4% 0;
-        
         h2 {
             width: 100%;
             text-align: center;
@@ -100,9 +51,8 @@ html,body {
 
         .event-item {
             @include flexCenter(space-between, center);
+            @include size(300px, 48%);
             position: relative;
-            width: 48%;
-            height: 300px;
             background-color: #fff;
             margin: 28px 0;
             img {
@@ -110,7 +60,6 @@ html,body {
                 object-position: center;
                 flex: 5.5;
                 width: 50%;
-
             }
             .detail {
                 @include flexCenter(flex-start, space-between);
@@ -160,13 +109,44 @@ html,body {
         }
     }
 
-}
-
-.footer {
-    @include flexCenter(center, center);
-    width: 100%;
-    background-color: #000000;
-    padding: 2% 0;
-    color: #FFF;
-    letter-spacing: 2px;
+    .attractions {
+        width: 100%;
+        h2 {
+            width: 100%;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 40px;
+        }
+        h2::before {
+            content: '　';
+            background-image: url('../images/attractions_icon.png');
+            padding: 12px;
+            margin-right: 12px;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+        .slider {
+            width: 100%;
+            .slider-item {
+                @include flexCenter(center, center);
+                flex-direction: column;
+                width: 20%;
+                img {
+                    object-fit: cover;
+                    object-position: center;
+                }
+                h3 {
+                    font-weight: 700
+                }
+                p::before {
+                    content: '';
+                    padding: 8px;
+                    background-image: url('../images/map_icon.png');
+                    background-size: cover;
+                    background-repeat: no-repeat;
+                }
+            }
+        }
+    }
 }
