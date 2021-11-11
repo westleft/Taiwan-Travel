@@ -43,7 +43,7 @@ export function render_activity(data, i, r, btns, slider) {
         };
 
         slider.innerHTML += `
-            <a href="" class="slider-item">
+            <a href="./page" class="slider-item">
                 <img src="${activity_img_src}" alt="">
                 <h3>${activity_name}</h3>
                 <p>${activity_city}</p>

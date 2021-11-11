@@ -4,10 +4,6 @@ import { render_activity } from './slider.js'
 let data,
     food_data;
 
-window.onload = function() {
-    // console.log("window loaded")
-};
-
 axios.get('https://ptx.transportdata.tw/MOTC/v2/Tourism/Activity?$top=20&$format=JSON',
     { headers: getAuthorizationHeader() })
     .then(function (response) {
