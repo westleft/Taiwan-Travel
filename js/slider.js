@@ -19,13 +19,17 @@
     </div>
 </div> */
 
-export function render_activity(activity_slider ,i, r) {
-    activity_slider.innerHTML = ''
+export function render_activity(data, i, r, btns, slider) {
+    slider.innerHTML = ''
 
     if (i == 0) {
-        attr_back_btn.style.display = 'none'
-    } else {
-        attr_back_btn.style.display = 'flex'
+        btns[1].style.display = 'none'
+    }else if(i == 16){
+        btns[0].style.display = 'none'
+    }
+    else {
+        btns[0].style.display = 'flex'
+        btns[1].style.display = 'flex'
     }
 
     for (i; i < r; i++) {
@@ -35,15 +39,14 @@ export function render_activity(activity_slider ,i, r) {
 
         // 判斷是否找不到圖
         if (activity_img_src == undefined) {
-            activity_img_src = './example_images/Rectangle 10.png';
+            activity_img_src = './images/non-image.jpg';
         };
 
-        activity_slider.innerHTML += `
+        slider.innerHTML += `
             <a href="" class="slider-item">
                 <img src="${activity_img_src}" alt="">
                 <h3>${activity_name}</h3>
                 <p>${activity_city}</p>
-            </a>
-        `
+            </a>`
     };
 }

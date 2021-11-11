@@ -5,6 +5,7 @@
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
+    overflow: hidden;
     input {
         @include size(56px, 40%);
         position: relative;
@@ -137,7 +138,7 @@
                 animation: img-display ease-out 0.3s;      
                 img {
                     width: 100%;
-                    height: 70%;
+                    height: 200px;
                     object-fit: cover;
                     object-position: center;
                     transition: 0.2s;
