@@ -287,8 +287,11 @@ table {
   background-color: #fff;
   padding-bottom: 12px;
   margin: 20px 0;
-  cursor: pointer;
-  overflow: hidden;
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
+  text-decoration: none;
+  -webkit-animation: img-display ease-out 0.3s;
+          animation: img-display ease-out 0.3s;
 }
 
 .main-content .attractions .slider .slider-item img {
@@ -300,10 +303,6 @@ table {
      object-position: center;
   -webkit-transition: 0.2s;
   transition: 0.2s;
-}
-
-.main-content .attractions .slider .slider-item img:hover {
-  width: 105%;
 }
 
 .main-content .attractions .slider .slider-item h3 {
@@ -334,6 +333,33 @@ table {
   margin-bottom: 3px;
 }
 
+.main-content .attractions .slider .slider-item:hover {
+  -webkit-transform: translate(-4px, -4px);
+          transform: translate(-4px, -4px);
+  -webkit-box-shadow: 8px 8px 12px rgba(0, 0, 0, 0.25);
+          box-shadow: 8px 8px 12px rgba(0, 0, 0, 0.25);
+}
+
+.main-content .attractions .slider .slider-item:first-child {
+  -webkit-animation-duration: 0.2s;
+          animation-duration: 0.2s;
+}
+
+.main-content .attractions .slider .slider-item:nth-child(2) {
+  -webkit-animation-duration: 0.4s;
+          animation-duration: 0.4s;
+}
+
+.main-content .attractions .slider .slider-item:nth-child(3) {
+  -webkit-animation-duration: 0.6s;
+          animation-duration: 0.6s;
+}
+
+.main-content .attractions .slider .slider-item:nth-child(4) {
+  -webkit-animation-duration: 0.8s;
+          animation-duration: 0.8s;
+}
+
 .main-content .attractions button {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -353,15 +379,15 @@ table {
   cursor: pointer;
 }
 
-.main-content .attractions .attr_next {
+.main-content .attractions .btn_next {
   right: 8%;
 }
 
-.main-content .attractions .attr_back {
+.main-content .attractions .btn_back {
   left: 8%;
 }
 
-.main-content .attractions .attr_next::after, .main-content .attractions .attr_back::after {
+.main-content .attractions .btn_next::after, .main-content .attractions .btn_back::after {
   height: 12px;
   width: 12px;
   position: relative;
@@ -370,13 +396,13 @@ table {
           transform: rotate(45deg);
 }
 
-.main-content .attractions .attr_next::after {
+.main-content .attractions .btn_next::after {
   border-right: solid 4px #fff;
   border-top: solid 4px #fff;
   right: 2px;
 }
 
-.main-content .attractions .attr_back::after {
+.main-content .attractions .btn_back::after {
   border-left: solid 4px #fff;
   border-bottom: solid 4px #fff;
   left: 2px;
@@ -407,6 +433,24 @@ table {
   background-repeat: no-repeat;
   right: 28%;
   top: 8px;
+}
+
+@-webkit-keyframes img-display {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes img-display {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 html, body {

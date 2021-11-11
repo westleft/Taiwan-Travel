@@ -1,45 +1,84 @@
-let slider_item = document.querySelectorAll('.activity .slider-item')
+import { getAuthorizationHeader } from './getHeader.js'
+
 let data
 
 axios.get(
-    'https://ptx.transportdata.tw/MOTC/v2/Tourism/Activity?$top=10&$format=JSON',
+    'https://ptx.transportdata.tw/MOTC/v2/Tourism/Activity?$top=30&$format=JSON',
     {
         headers: getAuthorizationHeader()
     }
 )
     .then(function (response) {
         data = response.data
-        console.log(data);
-        console.log(data[0].Name);
-        render_activity()
+        render_activity(0, 4, attr_btns, activity_slider)
+        render_activity(0, 4, attr_btns, resturant_slider)
     })
     .catch(function (error) {
         console.log(error);
     });
 
 
-function getAuthorizationHeader() {
-    //  填入自己 ID、KEY 開始
-    let AppID = '42b22f6beb5e4145b6950a6de2cfa9ae';
-    let AppKey = '9NjxheGMlL7TyIb7hvIkzdVtD1s';
-    //  填入自己 ID、KEY 結束
-    let GMTString = new Date().toGMTString();
-    let ShaObj = new jsSHA('SHA-1', 'TEXT');
-    ShaObj.setHMACKey(AppKey, 'TEXT');
-    ShaObj.update('x-date: ' + GMTString);
-    let HMAC = ShaObj.getHMAC('B64');
-    let Authorization = 'hmac username=\"' + AppID + '\", algorithm=\"hmac-sha1\", headers=\"x-date\", signature=\"' + HMAC + '\"';
-    return { 'Authorization': Authorization, 'X-Date': GMTString };
+// 首頁 熱門景點 slider
+let activity_slider = document.querySelector('.activity .slider');
+let attr_next_btn = document.querySelector('.attr_next');
+let attr_back_btn = document.querySelector('.attr_back');
+let i = 0, 
+    r = 4;
+    
+let attr_btns = [attr_next_btn, attr_back_btn]
+
+attr_next_btn.addEventListener('click', () => {
+    i += 4; r += 4
+    render_activity(i, r, attr_btns, activity_slider)
+})
+attr_back_btn.addEventListener('click', () => {
+    i -= 4; r -= 4
+    render_activity(i, r, attr_btns, activity_slider)
+})
+
+// 首頁 推薦美食 slider
+let resturant_slider = document.querySelector('.resturant .slider')
+let rest_next_btn = document.querySelector('.rest_next')
+let rest_back_btn = document.querySelector('.rest_back')
+
+let rest_btns = [rest_next_btn, rest_back_btn]
+
+rest_next_btn.addEventListener('click', () => {
+    i += 4; r += 4
+    render_activity(i, r, rest_btns, resturant_slider)
+})
+rest_back_btn.addEventListener('click', () => {
+    i -= 4; r -= 4
+    render_activity(i, r, rest_btns, resturant_slider)
+})
+
+// 首頁 slider 用
+function render_activity(i, r, btns, slider) {
+    slider.innerHTML = ''
+
+    if (i == 0) {
+        btns[1].style.display = 'none'
+    } else {
+        btns[1].style.display = 'flex'
+    }
+
+    for (i; i < r; i++) {
+        let activity_img_src = data[i].Picture.PictureUrl1,
+            activity_name = data[i].Name,
+            activity_city = data[i].City;
+
+        // 判斷是否找不到圖
+        if (activity_img_src == undefined) {
+            activity_img_src = './example_images/Rectangle 10.png';
+        };
+
+        slider.innerHTML += `
+            <a href="" class="slider-item">
+                <img src="${activity_img_src}" alt="">
+                <h3>${activity_name}</h3>
+                <p>${activity_city}</p>
+            </a>`
+
+        
+    };
 }
-
-
-function render_activity(){
-    slider_item.forEach((item, index) => {
-        // item.innerHTML = `
-        // <img src="${data[index + 5].Picture.PictureUrl1}" alt="">
-        // <h3>${data[index + 5].Name}</h3>
-        // <p>${data[index + 5].City}</p>
-        // `
-    });
-}
-

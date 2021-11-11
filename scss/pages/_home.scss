@@ -132,18 +132,15 @@
                 background-color: #fff;
                 padding-bottom: 12px;
                 margin: 20px 0 ;
-                cursor: pointer;
-                overflow: hidden;
-                
+                transition: 0.2s;      
+                text-decoration: none;    
+                animation: img-display ease-out 0.3s;      
                 img {
                     width: 100%;
                     height: 70%;
                     object-fit: cover;
                     object-position: center;
                     transition: 0.2s;
-                }
-                img:hover {
-                    width: 105%;
                 }
                 h3 {
                     font-weight: 700;
@@ -164,8 +161,22 @@
                 }
             }
             
-            
-            
+            .slider-item:hover {
+                transform: translate(-4px, -4px);
+                box-shadow: 8px 8px 12px rgba(0, 0, 0, 0.25);
+            }
+            .slider-item:first-child {
+                animation-duration: 0.2s;  
+            }
+            .slider-item:nth-child(2) {
+                animation-duration: 0.4s;  
+            }
+            .slider-item:nth-child(3) {
+                animation-duration: 0.6s;  
+            }
+            .slider-item:nth-child(4) {
+                animation-duration: 0.8s;  
+            }
         }
         button {
             @include flexCenter(center, center);
@@ -176,25 +187,24 @@
             border: none;
             cursor: pointer;
         }
-        .attr_next {
+        .btn_next {
             right: 8%;
         }
-        .attr_back {
+        .btn_back {
             left: 8%;
         }
-        .attr_next::after,.attr_back::after {
+        .btn_next::after,.btn_back::after {
             @include size(12px, 12px);
             position: relative;
             content: '';
             transform: rotate(45deg);
-            
         }
-        .attr_next::after {
+        .btn_next::after {
             border-right: solid 4px #fff;
             border-top: solid 4px #fff;
             right: 2px;
         }
-        .attr_back::after {
+        .btn_back::after {
             border-left: solid 4px #fff;
             border-bottom: solid 4px #fff;
             left: 2px
@@ -210,8 +220,6 @@
         }
     }
 }
-
-
 
 .more {
     position: relative;
@@ -230,4 +238,13 @@
     background-repeat: no-repeat;
     right: 28%;
     top: 8px;
+}
+
+@keyframes img-display {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
