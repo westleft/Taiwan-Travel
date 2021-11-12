@@ -6,28 +6,24 @@ let data,
 
 axios.get('https://ptx.transportdata.tw/MOTC/v2/Tourism/Activity?$top=20&$format=JSON',
     { headers: getAuthorizationHeader() })
-    .then(function (response) {
+    .then((response) => {
         data = response.data
         render_activity(data, 0, 4, attr_btns, activity_slider)
     })
-    .catch(function (error) {
-        console.log(error);
-    })
+    .catch((error) => {console.log(error);})
 
 axios.get('https://ptx.transportdata.tw/MOTC/v2/Tourism/Restaurant?$top=20&$format=JSON',
     { headers: getAuthorizationHeader() })
-    .then(function (response) {
+    .then((response) => {
         food_data = response.data
         render_activity(food_data, 0, 4, rest_btns, resturant_slider)
     })
-    .catch(function (error) {
-        console.log(error);
-    })
+    .catch((error) => {console.log(error);})
 
 // 首頁 熱門景點 slider
-let activity_slider = document.querySelector('.activity .slider');
-let attr_next_btn = document.querySelector('.attr_next');
-let attr_back_btn = document.querySelector('.attr_back');
+let activity_slider = document.querySelector('.activity .slider'),
+    attr_next_btn = document.querySelector('.attr_next'),
+    attr_back_btn = document.querySelector('.attr_back');
 let i = 0, 
     r = 4,
     i2 = 0,
@@ -46,9 +42,9 @@ attr_back_btn.addEventListener('click', () => {
 })
 
 // 首頁 推薦美食 slider
-let resturant_slider = document.querySelector('.resturant .slider')
-let rest_next_btn = document.querySelector('.rest_next')
-let rest_back_btn = document.querySelector('.rest_back')
+let resturant_slider = document.querySelector('.resturant .slider'),
+    rest_next_btn = document.querySelector('.rest_next'),
+    rest_back_btn = document.querySelector('.rest_back');
 
 let rest_btns = [rest_next_btn, rest_back_btn]
 

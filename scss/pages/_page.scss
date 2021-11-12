@@ -34,3 +34,94 @@
         outline: #00447c80 solid 4px;
     }
 }
+
+.select_bar {
+    @include flexCenter(center, center);
+    width: 100%;
+    height: 200px;
+    background: #E5E5E5;
+
+    .inner {
+        @include flexCenter(center, space-between);
+        width: 76%;
+        border-bottom: 1px solid rgb(51, 51, 51);
+        ul {
+            @include flexCenter(center, center);
+            li {
+                cursor: pointer;
+                padding: 12px;
+                text-align: center;
+            }
+        }
+        .li-selected {
+            border-bottom: 8px solid rgb(88, 88, 211);
+            text-align: center;
+        }
+    }
+}
+
+
+.result {
+    @include flexCenter(center, center);
+    flex-direction: column;
+    width: 100%;
+    background-color: #E5E5E5;;
+    .event {
+        @include flexCenter(center, space-between);
+        flex-wrap: wrap;
+        width: 76%;
+        padding: 4% 0;
+        .event-item {
+            @include flexCenter(space-between, center);
+            @include size(300px, 48%);
+            position: relative;
+            background-color: #fff;
+            margin: 28px 0;
+            img {
+                object-fit: cover;
+                object-position: center;
+                flex: 5.5;
+                width: 50%;
+            }
+            .detail {
+                @include flexCenter(flex-start, space-between);
+                flex-direction: column;
+                flex: 4.5;
+                padding: 20px 16px 60px 16px;
+                line-height: 140%;
+            }
+            h3 {
+                font-weight: 700;
+                font-size: 20px;
+            }
+            span {
+                font-weight: 700;
+                padding-right: 8px;
+            }
+            button {
+                position: absolute;
+                background-color: #5B9BD5;
+                color: #FFF;
+                font-size: 16px;
+                font-weight: 700;
+                cursor: pointer;
+                border: none;
+                padding: 8px 32px;
+                border-radius: 16px;
+                right: 4%;
+                bottom: 4%;
+            }
+        }
+    }
+}
+
+
+.change_page {
+    @include flexCenter(center, center);
+    width: 100%;
+    background: #E5E5E5;
+    padding: 20px 0;
+    button {
+        margin: 4px;
+    }
+}
