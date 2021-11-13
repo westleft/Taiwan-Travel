@@ -7,6 +7,7 @@ axios.get('https://ptx.transportdata.tw/MOTC/v2/Tourism/ScenicSpot/Taipei?$top=3
         // console.log(response.config);
     });
 
+// 抓取網址參數
 function get_url() {
     let url = location.href;
     if (url.includes('?')) {
@@ -19,5 +20,3 @@ function get_url() {
         console.log(url_parameter_data);
     }
 }
-
-// get_url()

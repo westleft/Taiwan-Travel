@@ -496,7 +496,7 @@ table {
 
 .search_bar input {
   height: 56px;
-  width: 40%;
+  width: 72%;
   position: relative;
   border: none;
   border-radius: 24px;
@@ -525,7 +525,6 @@ table {
       -ms-flex-pack: center;
           justify-content: center;
   width: 100%;
-  height: 200px;
   background: #E5E5E5;
 }
 
@@ -540,7 +539,7 @@ table {
       -ms-flex-pack: justify;
           justify-content: space-between;
   width: 76%;
-  border-bottom: 1px solid #333333;
+  border-bottom: 1px solid #BDBDBD;
 }
 
 .select_bar .inner ul {
@@ -559,11 +558,23 @@ table {
   cursor: pointer;
   padding: 12px;
   text-align: center;
+  border-bottom: 8px solid rgba(88, 88, 211, 0);
 }
 
 .select_bar .inner .li-selected {
-  border-bottom: 8px solid #5858d3;
+  border-bottom: 8px solid #5B9BD5;
   text-align: center;
+}
+
+.select_bar .inner select {
+  height: 46px;
+  width: 150px;
+  -webkit-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+          box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 25px;
+  padding: 4px 16px;
+  color: #BDBDBD;
+  border: none;
 }
 
 .result {
@@ -615,6 +626,8 @@ table {
   position: relative;
   background-color: #fff;
   margin: 28px 0;
+  -webkit-animation: img-display ease-out 0.3s;
+          animation: img-display ease-out 0.3s;
 }
 
 .result .event .event-item img {
@@ -673,7 +686,7 @@ table {
   bottom: 4%;
 }
 
-.change_page {
+.btns {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -688,8 +701,35 @@ table {
   padding: 20px 0;
 }
 
-.change_page button {
+.btns button {
   margin: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  border: 1px solid #DFE3E8;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border-radius: 4px;
+  color: #212B36;
+}
+
+.btns .btn_select {
+  background: #D69F8F;
+  border: 1px solid #D69F8F;
+  color: #fff;
+}
+
+.btns .next_btn img {
+  -webkit-transform: rotate(180deg);
+          transform: rotate(180deg);
+}
+
+@keyframes img-display {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 html, body {
