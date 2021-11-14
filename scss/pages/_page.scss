@@ -81,7 +81,9 @@
         padding: 4% 0;
         .event-item {
             @include flexCenter(space-between, center);
-            @include size(300px, 48%);
+
+            width: 48%;
+            min-height: 320px;
             position: relative;
             background-color: #fff;
             margin: 28px 0;
@@ -93,7 +95,7 @@
                 width: 50%;
             }
             .detail {
-                @include flexCenter(flex-start, space-between);
+                @include flexCenter(flex-start, flex-start);
                 flex-direction: column;
                 flex: 4.5;
                 padding: 20px 16px 60px 16px;
@@ -102,6 +104,9 @@
             h3 {
                 font-weight: 700;
                 font-size: 20px;
+            }
+            p {
+                margin-top: 12px;
             }
             span {
                 font-weight: 700;
