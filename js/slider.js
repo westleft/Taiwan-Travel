@@ -63,7 +63,7 @@ export function render_pages_item(data, item, num, type) {
                     </div>`
 
         }
-        else if (type == '各地景點') {
+        else if (type == '各地景點' || type == '探索美食' || type == '住宿飯店') {
             let img_src = data[i].Picture.PictureUrl1,
                 name = data[i].Name,
                 description = data[i].Description;
@@ -92,65 +92,6 @@ export function render_pages_item(data, item, num, type) {
                         </div>
                     </div>`
         }
-        else if (type == '探索美食') {
-            let img_src = data[i].Picture.PictureUrl1,
-                name = data[i].Name,
-                description = data[i].Description;
-            
-            // 判斷是否找不到圖
-            if (img_src == undefined) {
-                img_src = '../../images/non-image.jpg';
-            };
-            // 判斷是否有簡介
-            if(description) {
-                description = description.slice(0, 40)
-            }else if(description == undefined){
-                description = '暫無詳細資料，等您來親自體驗'
-            }
-
-            item.innerHTML += `
-                    <div class="event-item">
-                        <img src="${img_src}" alt="">
-                        <div class="detail">
-                            <h3>${name}</h3>
-                            <p><span>地點</span>新北市板橋區</p>
-                            <p>${description}...</p>
-                            <a href="">
-                                <button>活動詳情</button>
-                            </a>
-                        </div>
-                    </div>`
-        }
-        else if (type == '住宿飯店') {
-            let img_src = data[i].Picture.PictureUrl1,
-                name = data[i].Name,
-                description = data[i].Description;
-            
-            // 判斷是否找不到圖
-            if (img_src == undefined) {
-                img_src = '../../images/non-image.jpg';
-            };
-            // 判斷是否有簡介
-            if(description) {
-                description = description.slice(0, 40)
-            }else if(description == undefined){
-                description = '暫無詳細資料，等您來親自體驗'
-            }
-
-            item.innerHTML += `
-                    <div class="event-item">
-                        <img src="${img_src}" alt="">
-                        <div class="detail">
-                            <h3>${name}</h3>
-                            <p><span>地點</span>新北市板橋區</p>
-                            <p>${description}...</p>
-                            <a href="">
-                                <button>活動詳情</button>
-                            </a>
-                        </div>
-                    </div>`
-        }
-
     };
 };
 

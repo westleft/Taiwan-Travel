@@ -7,10 +7,11 @@ section {
     .wrap {
         @include flexCenter(flex-start, center);
         width: 76%;
+        flex-wrap: wrap;
         .slider {
             @include flexCenter(center, center);
             flex-direction: column;
-            flex: 1;
+            width: 50%;
             .main-img {
                 @include flexCenter(center, center);
                 width: 100%;
@@ -26,7 +27,6 @@ section {
                 @include flexCenter(center, space-between);
                 display: flex;
                 width: 100%;
-
                 img {
                     width: 30%;
                     height: 100px;
@@ -39,7 +39,7 @@ section {
         .content {
             @include flexCenter(flex-start, flex-start);
             flex-direction: column;
-            flex: 1;
+            width: 50%;
             padding: 0 4%;
             line-height: 140%;
             h1 {
@@ -65,7 +65,94 @@ section {
                     margin-right: 8px;
                 }
             }
+            a {
+                background-color: #5B9BD5;
+                border-radius: 20px;
+                padding: 10px 40px 8px 40px;
+                color: #FFFFFF;
+                text-decoration: none;
+            }
+        }
+        .transport {
+            margin-top: 4%;
+            width: 50%;
+            h2 {
+                color: #00457C;
+                font-weight: 700;
+            }
+            p {
+                line-height: 140%;
+            }
+        }
+        .map {
+            width: 50%;
+            margin-top: 4%;
         }
     }
     
+}
+
+.recommend-slider {
+    @include flexCenter(center, center);
+    width: 100%;
+    display: flex;
+    
+    background: #E5E5E5;
+    padding-bottom: 100px;
+    .wrap {
+        @include flexCenter( space-between,  space-between);
+        width: 76%;
+        flex-direction: column;
+        h2 {
+            font-weight: 700;
+            color: #000000;
+            padding-bottom: 40px;
+        }
+        h2::before {
+            content: '　';
+            background-image: url('../../images/recommend-icon.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            margin-bottom: 3px;
+            margin-right: 4px;
+        }
+    }
+    .slider {
+        @include flexCenter(center, space-between);
+        .slider-item {
+            width: 30%;
+            background-color: #fff;
+            
+            a {
+                color:#000000;
+                text-decoration: none;
+            }
+            h3 {
+                padding: 16px 12px ;
+                font-weight: 700;
+            }
+            p {
+                @include flexCenter(center, flex-start);
+                padding: 4px 12px 20px 12px;
+                color: #5B9BD5;
+                font-weight: 400;
+            }
+            p::before {
+                content: '　';
+                background-image: url('../../images/map_icon.png');
+                background-size: contain;
+                background-repeat: no-repeat;
+                margin-bottom: 3px;
+            }
+            img {
+                width: 100%;
+                object-fit: cover;
+                object-position: center;
+            }
+        }
+    }
+}
+#map {
+    width: 100%;
+    height: 500px;
 }

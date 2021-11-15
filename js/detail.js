@@ -6,3 +6,16 @@ preview_imgs.forEach(item => {
         main_img.setAttribute('src', item.getAttribute("src"));
     });
 });
+
+// google地圖
+
+
+var map;
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 25.04, lng: 121.512},
+    zoom: 18
+  });
+}
+
+
