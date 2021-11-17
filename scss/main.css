@@ -970,6 +970,8 @@ section .wrap .map {
 .recommend-slider .slider .slider-item {
   width: 30%;
   background-color: #fff;
+  height: 100%;
+  min-height: 450px;
 }
 
 .recommend-slider .slider .slider-item a {

@@ -36,8 +36,6 @@ axios.get('https://ptx.transportdata.tw/MOTC/v2/Tourism/Activity?$top=4&$format=
 
 // 首頁 精選活動
 let event = document.querySelector('.main-content .event')
-
-
 function render_event(data){
     event.innerHTML += `<h2 class="event-title">精選活動</h2>`;
     data.forEach((item, index) => {

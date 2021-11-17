@@ -123,7 +123,8 @@ section {
         .slider-item {
             width: 30%;
             background-color: #fff;
-            
+            height: 100%;
+            min-height: 450px;
             a {
                 color:#000000;
                 text-decoration: none;

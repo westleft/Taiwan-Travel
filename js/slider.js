@@ -19,9 +19,11 @@ export function render_activity(data, i, r, btns, slider) {
 
         // 判斷是否找不到圖
         if (activity_img_src == undefined) {
-            activity_img_src = './images/non-image.jpg';
+            activity_img_src = '../../images/non-image.jpg';
         };
-
+        if (activity_city == undefined) {
+            
+        }
         slider.innerHTML += `
             <a class="slider-item" href="./page/detail/?id=${data[i].ID}">
                 <img src="${activity_img_src}" alt="">

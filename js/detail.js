@@ -54,13 +54,13 @@ let detail_slider = document.querySelector('section .wrap .slider')
 function render_detail_slider(item) {
   // 判斷是否有圖
   if (item.Picture.PictureUrl1 == undefined) {
-    item.Picture.PictureUrl1 = './images/non-image.jpg';
+    item.Picture.PictureUrl1 = '../../images/non-image.jpg';
   }
   if (item.Picture.PictureUrl2 == undefined) {
-    item.Picture.PictureUrl2 = './images/non-image.jpg';
+    item.Picture.PictureUrl2 = '../../images/non-image.jpg';
   }
   if (item.Picture.PictureUrl3 == undefined) {
-    item.Picture.PictureUrl3 = './images/non-image.jpg';
+    item.Picture.PictureUrl3 = '../../images/non-image.jpg';
   }
 
   detail_slider.innerHTML = `
@@ -91,7 +91,7 @@ function render_detail_slider(item) {
 let slider = document.querySelector('.recommend-slider .slider')
 let btn_next = document.querySelector('.btn_next'),
     btn_back = document.querySelector('.btn_back');
-let btns = [btn_back, btn_next]
+let btns = [btn_next, btn_back]
 
 let i = 0, r = 3
 
