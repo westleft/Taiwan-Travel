@@ -23,7 +23,7 @@ export function render_activity(data, i, r, btns, slider) {
         };
 
         slider.innerHTML += `
-            <a href="./page" class="slider-item">
+            <a class="slider-item" href="./page/detail/?id=${data[i].ID}">
                 <img src="${activity_img_src}" alt="">
                 <h3>${activity_name}</h3>
                 <p>${activity_city}</p>
@@ -34,7 +34,7 @@ export function render_activity(data, i, r, btns, slider) {
 // 分頁用
 export function render_pages_item(data, item, num, type) {
     item.innerHTML = ''
-    console.log(type);
+
     for (let i = num * 10 - 10; i < num * 10; i++) {
         if (type == '精選活動') {
             let img_src = data[i].Picture.PictureUrl1,
@@ -56,7 +56,7 @@ export function render_pages_item(data, item, num, type) {
                             <p><span>時間</span>${startTime}-${endTime}</p>
                             <p><span>地點</span>新北市板橋區</p>
                             <p>${description}...</p>
-                            <a href="">
+                            <a href="./page/detail/id=1">
                                 <button>活動詳情</button>
                             </a>
                         </div>
@@ -86,7 +86,7 @@ export function render_pages_item(data, item, num, type) {
                             <h3>${name}</h3>
                             <p><span>地點</span>新北市板橋區</p>
                             <p>${description}...</p>
-                            <a href="">
+                            <a href="./page/detail/id=1">
                                 <button>活動詳情</button>
                             </a>
                         </div>
@@ -95,5 +95,8 @@ export function render_pages_item(data, item, num, type) {
     };
 };
 
-
 // 內頁用
+
+export function render_detail_slider(data) {
+
+}

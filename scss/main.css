@@ -917,6 +917,7 @@ section .wrap .map {
           justify-content: center;
   width: 100%;
   display: flex;
+  position: relative;
   background: #E5E5E5;
   padding-bottom: 100px;
 }
@@ -963,6 +964,7 @@ section .wrap .map {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
+  position: relative;
 }
 
 .recommend-slider .slider .slider-item {
@@ -1009,6 +1011,55 @@ section .wrap .map {
      object-fit: cover;
   -o-object-position: center;
      object-position: center;
+}
+
+.recommend-slider button {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  height: 40px;
+  width: 40px;
+  position: absolute;
+  top: 40%;
+  background-color: #D69F8F;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+}
+
+.recommend-slider .btn_next {
+  right: 8%;
+}
+
+.recommend-slider .btn_back {
+  left: 8%;
+}
+
+.recommend-slider .btn_next::after, .recommend-slider .btn_back::after {
+  height: 12px;
+  width: 12px;
+  position: relative;
+  content: '';
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+
+.recommend-slider .btn_next::after {
+  border-right: solid 4px #fff;
+  border-top: solid 4px #fff;
+  right: 2px;
+}
+
+.recommend-slider .btn_back::after {
+  border-left: solid 4px #fff;
+  border-bottom: solid 4px #fff;
+  left: 2px;
 }
 
 #map {

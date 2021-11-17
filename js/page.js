@@ -17,7 +17,6 @@ function axios_get(url, type){
         btn_color(btns, btns[1])
     })
     .catch((error) => { console.log(error); })
-
 }
 
 // 選單下邊框顏色
