@@ -1,8 +1,10 @@
 import { getAuthorizationHeader } from './getHeader.js'
 import { render_activity } from './slider.js'
+import { render_pages_item } from './slider.js'
 
 let data,
-    food_data;
+    food_data,
+    event_data;
 
 axios.get('https://ptx.transportdata.tw/MOTC/v2/Tourism/Activity?$top=20&$format=JSON',
     { headers: getAuthorizationHeader() })
@@ -10,7 +12,7 @@ axios.get('https://ptx.transportdata.tw/MOTC/v2/Tourism/Activity?$top=20&$format
         data = response.data
         render_activity(data, 0, 4, attr_btns, activity_slider)
     })
-    .catch((error) => {console.log(error);})
+    .catch((error) => { console.log(error); })
 
 axios.get('https://ptx.transportdata.tw/MOTC/v2/Tourism/Restaurant?$top=20&$format=JSON',
     { headers: getAuthorizationHeader() })
@@ -18,18 +20,62 @@ axios.get('https://ptx.transportdata.tw/MOTC/v2/Tourism/Restaurant?$top=20&$form
         food_data = response.data
         render_activity(food_data, 0, 4, rest_btns, resturant_slider)
     })
-    .catch((error) => {console.log(error);})
+    .catch((error) => { console.log(error); })
+
+axios.get('https://ptx.transportdata.tw/MOTC/v2/Tourism/Activity?$top=4&$format=JSON',
+    { headers: getAuthorizationHeader() })
+    .then((response) => {
+        event_data = response.data
+        console.log(event_data);
+        
+        render_event(event_data)
+    })
+    .catch((error) => { console.log(error); })
+
+
+
+// 首頁 精選活動
+let event = document.querySelector('.main-content .event')
+
+
+function render_event(data){
+    event.innerHTML += `<h2 class="event-title">精選活動</h2>`;
+    data.forEach((item, index) => {
+        let description = item.Description.slice(0, 40)
+
+        // 判斷是否找不到圖
+        if (item.Picture.PictureUrl1 == undefined) {
+            item.Picture.PictureUrl1 = './images/non-image.jpg';
+        }
+
+        event.innerHTML += `
+            <div class="event-item">
+                <img src="${item.Picture.PictureUrl1}" alt="">
+                <div class="detail">
+                    <h3>${item.Name}</h3>
+                    <p><span>時間</span>2021/11/20-2021/12/30</p>
+                    <p><span>地點</span>${item.Location}</p>
+                    <p>${description}...</p>
+                    
+                    <a href="./page/detail/?id=${item.ID}">
+                        <button>活動詳情</button>
+                    </a>
+                </div>
+            </div>
+            `
+    })
+}
 
 // 首頁 熱門景點 slider
 let activity_slider = document.querySelector('.activity .slider'),
     attr_next_btn = document.querySelector('.attr_next'),
     attr_back_btn = document.querySelector('.attr_back');
-let i = 0, 
+let i = 0,
     r = 4,
     i2 = 0,
     r2 = 4;
 
-    
+
 let attr_btns = [attr_next_btn, attr_back_btn]
 
 attr_next_btn.addEventListener('click', () => {

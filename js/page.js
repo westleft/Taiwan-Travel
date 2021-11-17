@@ -37,7 +37,7 @@ lists.forEach(item => {
 function render_lists_data(type){
     switch (type) {
         case '精選活動':
-            axios_get('https://ptx.transportdata.tw/MOTC/v2/Tourism/Activity?$select=Description%2CName%2CStartTime%2CEndTime%2CPicture&$top=100&$format=JSON','精選活動')
+            axios_get('https://ptx.transportdata.tw/MOTC/v2/Tourism/Activity?$top=100&$format=JSON','精選活動')
             break
         case '各地景點':
             axios_get('https://ptx.transportdata.tw/MOTC/v2/Tourism/ScenicSpot?$top=100&$format=JSON','各地景點')
@@ -106,7 +106,6 @@ function render_detail_item(btns, type) {
             current_page = parseInt(item.textContent)
             render_pages_item(data, event, current_page, type)
             btn_color(btns, item)
-
         })
     })
 }
@@ -119,5 +118,5 @@ function btn_color(btns, item){
     item.classList.add('btn_select')
 }
 
-let url = 'https://ptx.transportdata.tw/MOTC/v2/Tourism/Activity?$select=Description%2CName%2CStartTime%2CEndTime%2CPicture&$top=100&$format=JSON'
-axios_get(url, '精選活動')
+
+axios_get('https://ptx.transportdata.tw/MOTC/v2/Tourism/Activity?$top=100&$format=JSON', '精選活動')
