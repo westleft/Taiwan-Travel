@@ -15,7 +15,6 @@ function axios_get(url) {
     .then((response) => {
       data = response.data
       render_text_content(data, id)
-
       render_activity(data, i, r, btns, slider)
     })
     .catch((error) => { console.log(error); })
@@ -78,19 +77,18 @@ function render_detail_slider(item) {
 
 
 // google地圖
-// let map;
-// function initMap() {
-//   map = new google.maps.Map(document.getElementById('map'), {
-//     center: { lat: 25.04, lng: 121.512 },
-//     zoom: 18
-//   });
-// }
-// initMap()
+let map;
+function initMap(positionLat, positionLon) {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: { lat: positionLat, lng: positionLon },
+    zoom: 18
+  });
+}
 
 // 內頁用 下方slider按鈕
 let slider = document.querySelector('.recommend-slider .slider')
 let btn_next = document.querySelector('.btn_next'),
-    btn_back = document.querySelector('.btn_back');
+  btn_back = document.querySelector('.btn_back');
 let btns = [btn_next, btn_back]
 
 let i = 0, r = 3
@@ -135,6 +133,7 @@ function render_text_content(data, id) {
       `
 
       render_detail_slider(item)
+      initMap(item.Position.PositionLat, item.Position.PositionLon)
     }
   })
 }

@@ -12,6 +12,7 @@ export function render_activity(data, i, r, btns, slider) {
         btns[1].style.display = 'flex'
     }
 
+
     for (i; i < r; i++) {
         let activity_img_src = data[i].Picture.PictureUrl1,
             activity_name = data[i].Name,
@@ -22,7 +23,7 @@ export function render_activity(data, i, r, btns, slider) {
             activity_img_src = '../../images/non-image.jpg';
         };
         if (activity_city == undefined) {
-            
+            activity_city = '尚無資料'
         }
         slider.innerHTML += `
             <a class="slider-item" href="./page/detail/?id=${data[i].ID}">
@@ -64,7 +65,6 @@ export function render_pages_item(data, item, num, type) {
                             </a>
                         </div>
                     </div>`
-
         }
         else if (type == '各地景點' || type == '探索美食' || type == '住宿飯店') {
             let img_src = data[i].Picture.PictureUrl1,
