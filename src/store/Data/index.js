@@ -5,7 +5,14 @@ import Hotel from "./hotel.js"
 
 export default {
   namespaced: true,
-  state: {},
+  state: {
+    data: {
+      active: {},
+      hotel: {},
+      resturant: {},
+      scenicSpot: {}
+    },
+  },
   mutations: {},
   actions: {},
   getters: {},

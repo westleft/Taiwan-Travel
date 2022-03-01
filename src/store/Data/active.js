@@ -7,7 +7,7 @@ export default {
     },
     mutations: {
       setList(state, data) {  
-        state.data.value = data
+        state.data = data
       },
   
       // 修改格式

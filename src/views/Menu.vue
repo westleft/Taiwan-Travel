@@ -39,8 +39,6 @@ export default {};
     <router-view></router-view>
     <div class="event"></div>
   </div>
-
-  <div class="btns"></div>
 </template>
 
 <style lang="scss">
