@@ -52,7 +52,7 @@ export default {
         <p><span>地點</span>{{ item.Location }}</p>
         <p>{{ item.Description }}</p>
         <a href="./detail/?id=${data[i].ID}">
-          <button>活動詳情</button>
+          <button>活動詳情 </button>
         </a>
       </div>
     </div>
