@@ -1,5 +1,28 @@
 <script>
-export default {};
+import { ref, watch, onMounted, reactive, computed } from "vue";
+import { useRoute } from "vue-router";
+import { useStore } from "vuex";
+
+export default {
+  setup() {
+    const route = useRoute();
+    const store = useStore();
+
+    const data = computed(() => {
+      if (route.path === "/menu/active") {
+        return store.getters.getActiveList;
+      } else if (route.path === "/menu/scenicSpot") {
+        return store.getters.getScenicSpotList;
+      } else if (route.path === "/menu/resturant") {
+        return store.getters.getRestaurantList;
+      } else if (route.path === "/menu/hotel") {
+        return store.getters.getGetHotelList;
+      }
+    });
+
+    return { data };
+  },
+};
 </script>
 <template>
   <div class="banner">
@@ -36,7 +59,23 @@ export default {};
   </div>
 
   <div class="result">
-    <router-view></router-view>
+    <!-- <router-view></router-view> -->
+    <div class="event">
+      <div  v-for="item in data" :key="item" class="event-item">
+        <img v-if="item.picture" :src="item.picture" alt="" />
+        <img v-else src="~@/assets/images/non-image.jpg" />
+
+        <div class="detail">
+          <h3>{{ item.name }}</h3>
+          <p><span>時間</span>{{ item.startTime }} - {{ item.endTime }}</p>
+          <p><span>地點</span>{{ item.city }}</p>
+          <p>{{ item.description }}</p>
+          <a href="">
+            <button>活動詳情</button>
+          </a>
+        </div>
+      </div>
+    </div>
     <div class="event"></div>
   </div>
 </template>
@@ -127,7 +166,6 @@ export default {};
     flex-wrap: wrap;
     width: 76%;
     padding: 4% 0;
-
   }
 }
 

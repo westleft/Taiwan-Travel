@@ -9,12 +9,13 @@ import ScenicSpot from "../components/home/scenicSpot.vue"
 export default {
   components: {
     Active,
-    Restaurant,
-    ScenicSpot
+    // Restaurant,
+    // ScenicSpot
   },
   setup() {
-
-
+    const store = useStore()
+    // console.log(store.state.data)
+    // console.log(store.getters.getActiveList)
     return {};
   },
 };
@@ -31,10 +32,10 @@ export default {
     </div>
     <a href="./page/" class="more">More</a>
     <div class="attractions activity">
-      <ScenicSpot />
+      <!-- <ScenicSpot /> -->
     </div>
     <div class="attractions resturant">
-      <Restaurant />
+      <!-- <Restaurant /> -->
     </div>
   </div>
 </template>

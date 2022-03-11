@@ -1,8 +1,8 @@
+import jsSHA from "jssha";
+
 export function getAuthorizationHeader() {
-    //  填入自己 ID、KEY 開始
     let AppID = '42b22f6beb5e4145b6950a6de2cfa9ae';
     let AppKey = '9NjxheGMlL7TyIb7hvIkzdVtD1s';
-    //  填入自己 ID、KEY 結束
     let GMTString = new Date().toGMTString();
     let ShaObj = new jsSHA('SHA-1', 'TEXT');
     ShaObj.setHMACKey(AppKey, 'TEXT');

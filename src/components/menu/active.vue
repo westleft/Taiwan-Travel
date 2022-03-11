@@ -10,27 +10,29 @@ export default {
     let pageData = ref({});
     let btn = ref(0);
 
-    onMounted(async () => {
-      await store.dispatch("Data/Active/getList");
-      data.value = store.getters["Data/Active/getData"];
-      editData(1);
+    console.log(store.getters.getActiveList)
 
-      btn.value = btnLength(data.value);
+    onMounted(async () => {
+      // await store.dispatch("Data/Active/getList");
+      // data.value = store.getters["Data/Active/getData"];
+      // editData(1);
+
+      // btn.value = btnLength(data.value);
     });
 
     const btnLength = (data) => {
-      return data.length / 10;
+      // return data.length / 10;
     };
 
     // 取得分頁數字
     const getNumber = (num) => {
-      editData(num);
-      number.value = num
+      // editData(num);
+      // number.value = num
     };
 
     // 用分頁數字拿10筆資料
     const editData = (num) => {
-      pageData.value = data.value.slice(num, num + 10);
+      // pageData.value = data.value.slice(num, num + 10);
     };
 
     return { pageData, btn, getNumber, number };
@@ -39,7 +41,7 @@ export default {
 </script>
 <template>
   <div class="event">
-    <div v-for="item in pageData" :key="item" class="event-item">
+    <!-- <div v-for="item in pageData" :key="item" class="event-item">
       <img
         v-if="item.Picture.PictureUrl1"
         :src="item.Picture.PictureUrl1"
@@ -55,17 +57,17 @@ export default {
           <button>活動詳情 </button>
         </a>
       </div>
-    </div>
+    </div> -->
   </div>
   <div class="btns">
-    <button
+    <!-- <button
       v-for="(index, item) in btn"
       :key="item"
       @click="getNumber(index)"
       :class="{btn_select: index == number}"
     >
       {{ index }}
-    </button>
+    </button> -->
   </div>
 </template>
 
