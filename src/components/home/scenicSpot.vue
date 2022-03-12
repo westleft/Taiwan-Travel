@@ -1,68 +1,70 @@
 <script>
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, computed, watch } from "vue";
 import { useStore } from "vuex";
 export default {
   setup() {
-    const data = reactive({
-      fullData: [],
-      sliderData: [],
+    const store = useStore();
+    const data = computed(() => {
+      if (store.state.isload === true) {
+        return store.getters.getScenicSpotList;
+      }
     });
+
+    const sliderData = reactive({ list: {} });
     const index = ref(0);
-    const state = useStore();
-    const dataLength = ref(0);
 
-    onMounted(async () => {
-      await state.dispatch("Data/ScenicSpot/getList");
-      data.fullData = state.getters["Data/ScenicSpot/getData"];
+    const resController = (operation) => {
+      // 判斷要增加還減少
+      operation === "+" ? index.value += 4 :index.value -= 4
 
-      dataLength.value = data.fullData.value.length;
-      resController("remove");
-    });
-
-    // slider 控制
-    const resController = (oper) => {
-      data.sliderData = [];
-
-      if (index.value <= 0) {
-        index.value = data.fullData.value.length -4 ;
-      } else if (index.value >= data.fullData.value.length - 4) {
-        index.value = 0;
+      // 判斷是否大於或小於原本的 data 長度
+      if(index.value < 0){
+        index.value = data.value.length -4
+      }else if(index.value >= data.value.length){
+        index.value = 0
       }
 
-      if (oper == "add") {
-        index.value += 4;
-      } else {
-        index.value -= 4;
-      }
-        
-
-      for (let i = index.value; i < index.value + 4; i++) {
-        data.sliderData.push(data.fullData.value[i]);
-      }
-
+      sliderData.list = data.value.slice(index.value, index.value + 4);
     };
 
-    return { resController, data };
+    onMounted(()=>{
+      if(store.state.isload === true){
+        resController("+")
+      }
+    })
+
+    watch(
+      () => store.state.isload,
+      (newValue) => {
+        if(newValue === true || data.value !== {}){
+          resController("+")
+        }
+      }
+    );
+
+    return { resController, sliderData };
   },
 };
 </script>
 <template>
   <h2>熱門景點</h2>
   <div class="slider">
-    <a v-for="item in data['sliderData']" :key="item" class="slider-item" href="">
+    <a v-for="item in sliderData.list" :key="item" class="slider-item" href="">
       <img
-        v-if="item.Picture.PictureUrl1"
-        :src="item.Picture.PictureUrl1"
+        v-if="item.prcture"
+        :src="item.prcture"
         alt=""
       />
       <img v-else src="~@/assets/images/non-image.jpg" alt="" />
-      <h3>{{ item.ScenicSpotName }}</h3>
-      <p>{{ item.Address }}</p>
+      <h3>{{ item.name }}</h3>
+      <p>{{ item.city }}</p>
     </a>
   </div>
-  <button @click="resController('add')" class="attr_next btn_next"></button>
-  <button @click="resController('remove')" class="attr_back btn_back"></button>
-  <a href="./page/" class="more">More</a>
+  <button @click="resController('+')" class="attr_next btn_next"></button>
+  <button @click="resController('-')" class="attr_back btn_back"></button>
+  <router-link to="/menu/scenicSpot" class="more">
+    More
+  </router-link>
 </template>
 
 <style lang="scss">

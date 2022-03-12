@@ -1,16 +1,18 @@
 import { createStore } from "vuex"
+import { reactive,ref } from "vue"
 
 import { apiGetActiveList, apiGetRestaurantList, apiGetHotelList, apiGetScenicSpotList } from "@/api/index.js";
 
 export default createStore({
   namespaced: true,
   state: {
-    data: {
+    data: ref({
       active: {},
       resturant: {},
       scenicSpot: {},
       hotel: {}
-    }
+    }),
+    isload: ref(false)
   },
   mutations: {
     async callAllApi(state) {
@@ -70,6 +72,7 @@ export default createStore({
         })
         state.data.scenicSpot = data
       })
+      state.isload = true
     }
   },
   actions: {
@@ -78,8 +81,8 @@ export default createStore({
     }
   },
   getters: {
-    getActiveList(state) {
-      return state.data.active
+    async getActiveList(state) {
+      return await state.data.active
     },
     getRestaurantList(state) {
       return state.data.resturant

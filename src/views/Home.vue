@@ -2,20 +2,18 @@
 import { ref, onMounted, reactive } from "vue";
 import { useStore } from "vuex";
 
-import Active from "../components/home/active.vue"
-import Restaurant from "../components/home/restaurant.vue"
-import ScenicSpot from "../components/home/scenicSpot.vue"
+import Active from "../components/home/active.vue";
+import Restaurant from "../components/home/restaurant.vue";
+import ScenicSpot from "../components/home/scenicSpot.vue";
 
 export default {
   components: {
     Active,
-    // Restaurant,
-    // ScenicSpot
+    Restaurant,
+    ScenicSpot,
   },
   setup() {
-    const store = useStore()
-    // console.log(store.state.data)
-    // console.log(store.getters.getActiveList)
+    const store = useStore();
     return {};
   },
 };
@@ -28,14 +26,14 @@ export default {
 
   <div class="main-content">
     <div class="event">
-        <Active />
+      <Active />
     </div>
     <a href="./page/" class="more">More</a>
     <div class="attractions activity">
-      <!-- <ScenicSpot /> -->
+      <ScenicSpot />
     </div>
     <div class="attractions resturant">
-      <!-- <Restaurant /> -->
+      <Restaurant />
     </div>
   </div>
 </template>
@@ -98,8 +96,6 @@ export default {
       background-repeat: no-repeat;
     }
   }
-
-
 
   .resturant {
     h2::before {
