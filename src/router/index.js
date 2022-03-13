@@ -5,6 +5,7 @@ import Active from '../components/menu/active.vue'
 import Resturant from '../components/menu/resturant.vue'
 import Hotel from '../components/menu/hotel.vue'
 import ScenicSpot from '../components/menu/scenicSpot.vue'
+import Post from '../views/Post.vue'
 
 const routes = [
   {
@@ -30,6 +31,10 @@ const routes = [
         component: ScenicSpot,
       }
     ]
+  },{
+    path: '/post/:id',
+    name: 'Post',
+    component: Post
   },
   {
     path: '/about',
@@ -45,5 +50,10 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
+
+// 換頁後視窗到最上面
+router.afterEach((to, from, next) => {
+	window.scrollTo(0, 0);
+});
 
 export default router

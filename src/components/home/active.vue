@@ -38,11 +38,9 @@ export default {
       <p><span>時間</span>{{ item.startTime }}-{{ item.endTime }}</p>
       <p><span>地點</span>{{ item.city }}</p>
       <p>{{ item.description }}</p>
-
-      
-      <a href="/">
+      <router-link :to="`/post/${item.id}`">
         <button>活動詳情</button>
-      </a>
+      </router-link>
     </div>
   </div>
 </template>

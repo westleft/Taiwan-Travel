@@ -1,5 +1,6 @@
 import { createStore } from "vuex"
 import { reactive,ref } from "vue"
+import Post from "./Post/index.js"
 
 import { apiGetActiveList, apiGetRestaurantList, apiGetHotelList, apiGetScenicSpotList } from "@/api/index.js";
 
@@ -64,13 +65,14 @@ export default createStore({
             id: item.ScenicSpotID,
             name: item.ScenicSpotName,
             description: item.Description ? item.Description.slice(0, 20) : "",
-            city: item.City,
+            city: item.City ? item.City : "無提供地點",
             picture: item.Picture !== {} ? item.Picture.PictureUrl1 : "0",
             startTime: item.StartTime ? "" : "",
             endTime: item.EndTime ? "" : ""
           }
         })
         state.data.scenicSpot = data
+
       })
       state.isload = true
     }
@@ -81,8 +83,8 @@ export default createStore({
     }
   },
   getters: {
-    async getActiveList(state) {
-      return await state.data.active
+    getActiveList(state) {
+      return state.data.active
     },
     getRestaurantList(state) {
       return state.data.resturant
@@ -95,6 +97,6 @@ export default createStore({
     }
   },
   modules: {
-
-  },
+    Post,
+  }
 });

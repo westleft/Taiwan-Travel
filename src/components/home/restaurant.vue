@@ -49,15 +49,16 @@ export default {
 <template>
   <h2>推薦美食</h2>
   <div class="slider">
-    <a v-for="item in sliderData.list" :key="item" class="slider-item" href="">
+    <router-link v-for="item in sliderData.list" :key="item" class="slider-item" :to="`/post/${item.id}`">
       <img v-if="item.picture" :src="item.picture" alt="" />
       <img v-else src="~@/assets/images/non-image.jpg" alt="" />
       <h3>{{ item.name }}</h3>
       <p>{{ item.city }}</p>
-    </a>
+    </router-link>
   </div>
   <button @click="resController('+')" class="attr_next btn_next"></button>
   <button @click="resController('-')" class="attr_back btn_back"></button>
+  
   <router-link to="/menu/resturant" class="more">
     More
   </router-link>
