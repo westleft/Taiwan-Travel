@@ -1,32 +1,51 @@
-<script>
+<script setup>
 import { ref, watch, onMounted, reactive, computed } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 
-export default {
-  setup() {
-    const route = useRoute();
-    const store = useStore();
+const route = useRoute();
+const store = useStore();
+const router = useRouter();
 
-    const data = computed(() => {
-      if (route.path === "/menu/active") {
-        return store.getters.getActiveList;
-      } else if (route.path === "/menu/scenicSpot") {
-        return store.getters.getScenicSpotList;
-      } else if (route.path === "/menu/resturant") {
-        return store.getters.getRestaurantList;
-      } else if (route.path === "/menu/hotel") {
-        return store.getters.getGetHotelList;
-      }
-    });
+const titleMap = new Map();
+titleMap
+  .set("/menu/active", "精選活動")
+  .set("/menu/scenicSpot", "全台景點")
+  .set("/menu/resturant", "探索美食")
+  .set("/menu/hotel", "住宿飯店");
 
-    return { data };
-  },
+const title = computed(() => {
+  return titleMap.get(route.path);
+});
+
+const data = computed(() => {
+  if (route.path === "/menu/active") {
+    return store.getters.getActiveList;
+  } else if (route.path === "/menu/scenicSpot") {
+    return store.getters.getScenicSpotList;
+  } else if (route.path === "/menu/resturant") {
+    return store.getters.getRestaurantList;
+  } else if (route.path === "/menu/hotel") {
+    return store.getters.getGetHotelList;
+  }
+});
+const renderData = ref();
+const idx = ref(1);
+const getPage = (index) => {
+  renderData.value = data.value.slice(index, index + 10);
+  idx.value = index;
 };
+
+watch(
+  () => data.value,
+  () => {
+    getPage(1);
+  }
+);
 </script>
 <template>
   <div class="banner">
-    <p>精選活動</p>
+    <p>{{ title }}</p>
   </div>
 
   <div class="search_bar">
@@ -61,7 +80,7 @@ export default {
   <div class="result">
     <!-- <router-view></router-view> -->
     <div class="event">
-      <div  v-for="item in data" :key="item" class="event-item">
+      <div v-for="item in renderData" :key="item" class="event-item">
         <img v-if="item.picture" :src="item.picture" alt="" />
         <img v-else src="~@/assets/images/non-image.jpg" />
 
@@ -70,16 +89,24 @@ export default {
           <p><span>時間</span>{{ item.startTime }} - {{ item.endTime }}</p>
           <p><span>地點</span>{{ item.city }}</p>
           <p>{{ item.description }}</p>
-          
+
           <router-link :to="`/post/${item.id}`">
             <button>活動詳情</button>
           </router-link>
-            
-          
         </div>
       </div>
     </div>
-    <div class="event"></div>
+    <div class="btns">
+      <!-- :class="{btn_select}" -->
+      <button
+        v-for="(item, index) in data.length / 10"
+        :key="item"
+        @click="getPage(index)"
+        :class="{ btn_select: index === idx }"
+      >
+        {{ index + 1 }}
+      </button>
+    </div>
   </div>
 </template>
 

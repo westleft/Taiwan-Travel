@@ -1,22 +1,14 @@
-<script>
+<script setup>
 import { ref, onMounted, reactive } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
 import Active from "../components/home/active.vue";
 import Restaurant from "../components/home/restaurant.vue";
 import ScenicSpot from "../components/home/scenicSpot.vue";
 
-export default {
-  components: {
-    Active,
-    Restaurant,
-    ScenicSpot,
-  },
-  setup() {
-    const store = useStore();
-    return {};
-  },
-};
+const store = useStore();
+
 </script>
 
 <template>
