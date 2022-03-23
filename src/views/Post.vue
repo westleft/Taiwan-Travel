@@ -158,12 +158,12 @@ section {
   @include flexCenter(center, center);
   width: 100%;
   display: flex;
-  background: #e5e5e5;
+  background: $color_skin;
   padding: 100px 0;
   .wrap {
     @include flexCenter(flex-start, center);
     width: 76%;
-    flex-wrap: wrap;
+    flex-wrap: wrap; 
     .slider {
       @include flexCenter(center, center);
       flex-direction: column;
@@ -252,7 +252,7 @@ section {
   width: 100%;
   display: flex;
   position: relative;
-  background: #e5e5e5;
+  background: $color_skin;
   padding-bottom: 100px;
   .wrap {
     @include flexCenter(space-between, space-between);

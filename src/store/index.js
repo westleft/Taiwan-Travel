@@ -1,8 +1,8 @@
 import { createStore } from "vuex"
-import { reactive,ref } from "vue"
+import { reactive, ref } from "vue"
 import Post from "./Post/index.js"
 
-import { apiGetActiveList, apiGetRestaurantList, apiGetHotelList, apiGetScenicSpotList } from "@/api/index.js";
+import { apiGetActiveList, apiGetRestaurantList, apiGetHotelList, apiGetScenicSpotList } from "@/api/request.js";
 
 export default createStore({
   namespaced: true,

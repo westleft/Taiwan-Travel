@@ -8,7 +8,6 @@ import Restaurant from "../components/home/restaurant.vue";
 import ScenicSpot from "../components/home/scenicSpot.vue";
 
 const store = useStore();
-
 </script>
 
 <template>
@@ -66,7 +65,7 @@ const store = useStore();
   @include flexCenter(center, center);
   flex-direction: column;
   width: 100%;
-  background-color: #e5e5e5;
+  background-color: $color_skin;
   .event {
     @include flexCenter(center, space-between);
     flex-wrap: wrap;

@@ -1,10 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Menu from '../views/Menu.vue'
-import Active from '../components/menu/active.vue'
-import Resturant from '../components/menu/resturant.vue'
-import Hotel from '../components/menu/hotel.vue'
-import ScenicSpot from '../components/menu/scenicSpot.vue'
 import Post from '../views/Post.vue'
 
 const routes = [
@@ -13,24 +9,9 @@ const routes = [
     name: 'Home',
     component: Home
   },{
-    path: '/menu',
+    path: '/menu/:type',
     name: 'Menu',
     component: Menu,
-    children: [
-      {
-        path: "active",
-        component: Active,
-      },{
-        path: "resturant",
-        component: Resturant,
-      },{
-        path: "hotel",
-        component: Hotel,
-      },{
-        path: "scenicSpot",
-        component: ScenicSpot,
-      }
-    ]
   },{
     path: '/post/:id',
     name: 'Post',

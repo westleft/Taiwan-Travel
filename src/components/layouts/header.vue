@@ -1,36 +1,35 @@
 
-<script>
-import { onMounted } from "vue"
+<script setup>
+import Loading from "@/components/layouts/loading.vue";
+import { onMounted } from "vue";
 import { useStore } from "vuex";
-export default {
-  setup(){
-    const store = useStore();
 
-    onMounted(() => {
-      store.dispatch("callAllApi");
-    });
-  }
-};
+const store = useStore();
+
+onMounted(() => {
+  store.dispatch("callAllApi");
+});
 </script>
 <template>
+  <Loading />
   <div class="navbar">
     <router-link to="/">
-        <img src="~@/assets/images/logo.png" alt="" class="logo" />
+      <img src="~@/assets/images/logo.png" alt="" class="logo" />
     </router-link>
 
     <ul>
-        <li>
-            <router-link to="/menu/active">精選活動</router-link>
-        </li>
-        <li>
-            <router-link to="/menu/scenicSpot">全台景點</router-link>
-        </li>
-        <li>
-            <router-link to="/menu/resturant">探索美食</router-link>
-        </li>
-        <li>
-            <router-link to="/menu/hotel">住宿飯店</router-link>
-        </li>
+      <li>
+        <router-link to="/menu/active">精選活動</router-link>
+      </li>
+      <li>
+        <router-link to="/menu/scenicSpot">全台景點</router-link>
+      </li>
+      <li>
+        <router-link to="/menu/resturant">探索美食</router-link>
+      </li>
+      <li>
+        <router-link to="/menu/hotel">住宿飯店</router-link>
+      </li>
     </ul>
   </div>
 </template>

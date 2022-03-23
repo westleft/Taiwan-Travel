@@ -113,6 +113,7 @@ export default {
         font-weight: 700;
         padding: 16px 20px;
         line-height: 140%;
+        color: #000;
       }
       p {
         @include flexCenter(center, center);
