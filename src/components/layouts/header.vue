@@ -11,7 +11,7 @@ onMounted(() => {
 });
 </script>
 <template>
-  <Loading />
+  <!-- <Loading /> -->
   <div class="navbar">
     <router-link to="/">
       <img src="~@/assets/images/logo.png" alt="" class="logo" />

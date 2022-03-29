@@ -6,13 +6,13 @@ import { useRouter } from "vue-router";
 import Active from "../components/home/active.vue";
 import Restaurant from "../components/home/restaurant.vue";
 import ScenicSpot from "../components/home/scenicSpot.vue";
+import SearchBar from "@/components/layouts/searchBar.vue";
 
-const store = useStore();
 </script>
 
 <template>
   <div class="search-container">
-    <input type="text" placeholder="我想去..." />
+    <SearchBar class="SearchBar"/>
   </div>
 
   <div class="main-content">
@@ -38,6 +38,9 @@ const store = useStore();
   background-size: cover;
   background-repeat: no-repeat;
   overflow: hidden;
+  .SearchBar {
+    background-color: rgba(255, 255, 255, 0);
+  }
   input {
     @include size(56px, 40%);
     position: relative;

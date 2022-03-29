@@ -1,8 +1,6 @@
-
 <script>
 import { useRoute } from "vue-router";
-import { computed, onMounted, reactive } from "vue";
-import { ref, watch } from "vue";
+import { watch, ref, computed, onMounted, reactive, watchEffect } from "vue";
 import { useStore } from "vuex";
 export default {
   setup() {
@@ -10,8 +8,8 @@ export default {
     const store = useStore();
     const data = ref({});
     const isload = ref(true);
-    const tags = ref({})
-    const mainImg = ref()
+    const tags = ref({});
+    const mainImg = ref();
 
     onMounted(() => {
       store.dispatch("Post/checkType", route.params.id);
@@ -26,9 +24,15 @@ export default {
           data.value.position.PositionLon
         );
         isload.value = false;
-        tags.value = filterTags(data.value.class)        
+        tags.value = filterTags(data.value.class);
       }
     );
+
+    watch(()=>route.params.id,(n)=>{
+      if(route.path.includes("post")){
+        store.dispatch("Post/checkType", n);
+      }
+    })
 
     // Google Map
     const mapinitMap = (positionLat, positionLon) => {
@@ -39,18 +43,55 @@ export default {
     };
 
     // 整理 tag
-    const filterTags = (tag)=>{
-      return tag.filter(item=>{
-        return item !== ""
-      })
-    }
+    const filterTags = (tag) => {
+      return tag.filter((item) => {
+        return item !== "";
+      });
+    };
 
     // 控制 slider 顯示圖片
-    const sliderController = (e) =>{
-      mainImg.value.src = e.target.src
-    }
+    const sliderController = (e) => {
+      mainImg.value.src = e.target.src;
+    };
 
-    return { data, isload, tags, mainImg, sliderController };
+    // 產生隨機數
+    const getRandom = (x) => {
+      return Math.floor(Math.random() * x);
+    };
+
+    const recommendSliderData = computed(() => {
+      if (store.state.isload === true) {
+        return store.getters["getActiveList"];
+      }
+    });
+
+    const sliderData = reactive({ list: {} });
+
+    // 下方 slider
+    const renderData = () => {
+      for (let i = 0; i < 3; i++) {
+        const num = getRandom(recommendSliderData.value.length);
+        sliderData.list[i] = recommendSliderData.value[num];
+      }
+    };
+
+    watchEffect(()=>{
+      if(recommendSliderData.value) {
+        renderData()
+      }
+    })
+    
+
+    return {
+      data,
+      isload,
+      tags,
+      mainImg,
+      sliderController,
+      recommendSliderData,
+      sliderData,
+      renderData,
+    };
   },
 };
 </script>
@@ -102,7 +143,7 @@ export default {
         </p>
         <p>
           <span>票價資訊</span><br />
-          {{data.ticketInfo}}
+          {{ data.ticketInfo }}
         </p>
         <p>
           <span>地址</span><br />
@@ -121,34 +162,22 @@ export default {
       </div>
     </div>
   </section>
+
   <div class="recommend-slider">
     <div class="wrap">
       <h2>其他推薦</h2>
       <div class="slider">
-        <div class="slider-item">
-          <a href="" class="">
-            <img src="~@/assets/images/non-image.jpg" alt="" />
-            <h3>台中歌劇院</h3>
-            <p>台北市 北投區</p>
-          </a>
-        </div>
-        <div class="slider-item">
-          <a href="" class="">
-            <img src="~@/assets/images/non-image.jpg" alt="" />
-            <h3>台中歌劇院</h3>
-            <p>台北市 北投區</p>
-          </a>
-        </div>
-        <div class="slider-item">
-          <a href="" class="">
-            <img src="~@/assets/images/non-image.jpg" alt="" />
-            <h3>台中歌劇院</h3>
-            <p>台北市 北投區</p>
-          </a>
+        <div class="slider-item" v-for="item in sliderData.list" :key="item">
+          <router-link :to="`/post/${item.id}`">
+            <img v-if="item.picture" :src="item.picture" alt="" />
+            <img v-else src="~@/assets/images/non-image.jpg" />
+            <h3>{{ item.name }}</h3>
+            <p>{{ item.city }}</p>
+          </router-link>
         </div>
       </div>
-      <button class="btn_back"></button>
-      <button class="btn_next"></button>
+      <button class="btn_back" @click="renderData"></button>
+      <button class="btn_next" @click="renderData"></button>
     </div>
   </div>
 </template>
@@ -163,7 +192,7 @@ section {
   .wrap {
     @include flexCenter(flex-start, center);
     width: 76%;
-    flex-wrap: wrap; 
+    flex-wrap: wrap;
     .slider {
       @include flexCenter(center, center);
       flex-direction: column;
@@ -201,6 +230,7 @@ section {
       h1 {
         font-size: 3.5vmin;
         font-weight: 900;
+        line-height: 140%;
       }
       p {
         padding: 12px 0;
@@ -259,17 +289,20 @@ section {
     width: 76%;
     flex-direction: column;
     h2 {
+      display: flex;
       font-weight: 700;
       color: #000000;
       padding-bottom: 40px;
     }
     h2::before {
-      content: "　";
-      //   background-image: url("../../images/recommend-icon.png");
+      display: flex;
+      width: 20px;
+      height: 20px;
+      margin-right: 12px;
+      content: "";
+      background-image: url("~@/assets/images/recommend-icon.png");
       background-size: contain;
       background-repeat: no-repeat;
-      margin-bottom: 3px;
-      margin-right: 4px;
     }
   }
   .slider {
@@ -278,8 +311,8 @@ section {
     .slider-item {
       width: 30%;
       background-color: #fff;
-      height: 100%;
-      min-height: 350px;
+
+      max-height: 400px;
       text-decoration: none;
       a {
         color: #000000;
@@ -288,6 +321,7 @@ section {
       h3 {
         padding: 16px 12px;
         font-weight: 700;
+        line-height: 140%;
       }
       p {
         @include flexCenter(center, flex-start);
@@ -296,17 +330,20 @@ section {
         font-weight: 400;
       }
       p::before {
-        content: "　";
-        // background-image: url("../../images/map_icon.png");
+        display: flex;
+        content: "";
+        background-image: url("~@/assets/images/map_icon.png");
         background-size: contain;
         background-repeat: no-repeat;
-        margin-bottom: 3px;
+        line-height: 140%;
+        width: 20px;
+        height: 20px;
       }
       img {
         width: 100%;
         object-fit: cover;
         object-position: center;
-        max-height: 250px;
+        height: 250px;
       }
     }
   }

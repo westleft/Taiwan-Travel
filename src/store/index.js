@@ -1,6 +1,7 @@
 import { createStore } from "vuex"
 import { reactive, ref } from "vue"
 import Post from "./Post/index.js"
+import Search from "./Search/index.js"
 
 import { apiGetActiveList, apiGetRestaurantList, apiGetHotelList, apiGetScenicSpotList } from "@/api/request.js";
 
@@ -97,6 +98,6 @@ export default createStore({
     }
   },
   modules: {
-    Post,
+    Post, Search
   }
 });

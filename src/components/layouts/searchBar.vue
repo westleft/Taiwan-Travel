@@ -1,33 +1,52 @@
 <script setup>
-import { apiGetSearch } from "@/api/request.js"
-import { ref, provide } from "vue"
-import { useRouter } from "vue-router"
+import { apiGetSearch } from "@/api/request.js";
+import { ref, provide } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex"
 
-const router = useRouter()
-const emit = defineEmits(["getData"])
 
-const data = ref()
+const router = useRouter();
+const emit = defineEmits(["getData"]);
+const store = useStore();
 
-const getData = async () => {
-  try {
-    const res = await apiGetSearch("花蓮")
-    data.value = res.data
-    console.log(data.value)
-    emit("getData", data)
-    router.push("/menu/search")
-  } catch (err) {
-    // console.log(err)
-  }
-}
+const searchText = ref();
+const data = ref();
+
+// const getData = async () => {
+//   try {
+//     console.log(searchText.value)
+//     const res = await apiGetSearch(searchText.value);
+//     const data = res.data.map((item) => {
+//       return {
+//         id: item.ScenicSpotID,
+//         name: item.ScenicSpotName,
+//         description: item.Description ? item.Description.slice(0, 20) : "",
+//         city: item.City ? item.City : "無提供地點",
+//         picture: item.Picture !== {} ? item.Picture.PictureUrl1 : "0",
+//         startTime: item.StartTime ? "" : "",
+//         endTime: item.EndTime ? "" : "",
+//       };
+//     });
+//     emit("getData", data);
+//     router.push("/menu/search");
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };
 
 const send = () => {
-    getData()
-}
-
+  store.dispatch("Search/search", searchText.value)
+  router.push("/menu/search");
+};
 </script>
 <template>
   <div class="search_bar">
-    <input type="text" placeholder="所有縣市" @keypress.enter="send"/>
+    <input
+      type="text"
+      placeholder="所有縣市"
+      @keypress.enter="send"
+      v-model="searchText"
+    />
   </div>
 </template>
 

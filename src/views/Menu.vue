@@ -15,7 +15,8 @@ titleMap
   .set("/menu/active", "精選活動")
   .set("/menu/scenicSpot", "全台景點")
   .set("/menu/resturant", "探索美食")
-  .set("/menu/hotel", "住宿飯店");
+  .set("/menu/hotel", "住宿飯店")
+  .set("/menu/search", "搜尋結果");
 
 const title = computed(() => {
   return titleMap.get(route.path);
@@ -37,14 +38,9 @@ const bannerSrc = computed(() => {
   }
 });
 
-const searchData = ref();
-
-const callback = (emitData) => {
-  // console.log(emitData.value[0]);
-  // searchData.value = emitData.value;
-
-  searchData.value = emitData.value;
-};
+onMounted(() => {
+  getPage(0);
+});
 
 const data = computed(() => {
   if (route.path === "/menu/active") {
@@ -55,21 +51,27 @@ const data = computed(() => {
     return store.getters.getRestaurantList;
   } else if (route.path === "/menu/hotel") {
     return store.getters.getGetHotelList;
+  } else if (route.path === "/menu/search") {
+    getSearchData();
+    return searchData.value;
   }
 });
 
-onMounted(() => {
-  if (data.value.length > 2) {
-    getPage(0);
-  }
-});
+const searchData = ref();
+const getSearchData = () => {
+  searchData.value = store.state.Search.searchData;
+};
 
 const idx = ref(1);
 const renderData = ref();
 
 const getPage = (index) => {
-  renderData.value = data.value.slice(index, index + 10);
-  idx.value = index;
+  try {
+    renderData.value = data.value.slice(index, index + 10);
+    idx.value = index;
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 watch(
@@ -89,7 +91,7 @@ watch(
   >
     <p>{{ title }}</p>
   </div>
-  <SearchBar @getData="callback" />
+  <SearchBar />
 
   <div class="select_bar">
     <div class="inner">

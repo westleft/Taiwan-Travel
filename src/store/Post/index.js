@@ -7,7 +7,7 @@ export default {
     type: "",
     paramsId: "",
     isload: ref(true),
-  },
+  }, 
   mutations: {
     checkType(state, id) {
       state.paramsId = id;
