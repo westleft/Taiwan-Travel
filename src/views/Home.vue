@@ -100,48 +100,7 @@ import SearchBar from "@/components/layouts/searchBar.vue";
     }
   }
 }
-.event-item {
-  @include flexCenter(space-between, center);
-  @include size(350px, 48%);
-  min-height: 350px;
-  position: relative;
-  background-color: #fff;
-  margin: 28px 0;
-  img {
-    object-fit: cover;
-    object-position: center;
-    flex: 5.5;
-    width: 50%;
-  }
-  .detail {
-    @include flexCenter(flex-start, space-between);
-    flex-direction: column;
-    flex: 4.5;
-    padding: 20px 16px 60px 16px;
-    line-height: 140%;
-  }
-  h3 {
-    font-weight: 700;
-    font-size: 20px;
-  }
-  span {
-    font-weight: 700;
-    padding-right: 8px;
-  }
-  button {
-    position: absolute;
-    background-color: #5b9bd5;
-    color: #fff;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    border: none;
-    padding: 8px 32px;
-    border-radius: 16px;
-    right: 4%;
-    bottom: 4%;
-  }
-}
+
 .more {
   position: relative;
   text-align: right;

@@ -10,6 +10,7 @@ const store = useStore();
 const router = useRouter();
 const banner = ref(null);
 
+// 渲染上方 Title
 const titleMap = new Map();
 titleMap
   .set("/menu/active", "精選活動")
@@ -22,6 +23,7 @@ const title = computed(() => {
   return titleMap.get(route.path);
 });
 
+// 渲染上方 Banner
 const bannerMap = new Map();
 bannerMap
   .set("/menu/active", "event_bn.jpg")
@@ -65,13 +67,44 @@ const getSearchData = () => {
 const idx = ref(1);
 const renderData = ref();
 
+// 拿到當前頁數的 10 筆資料
 const getPage = (index) => {
   try {
     renderData.value = data.value.slice(index, index + 10);
     idx.value = index;
+    loadImg(renderData.value);
   } catch (err) {
     console.log(err);
   }
+};
+
+// 計算按鈕數量
+const renderButton = computed(() => {
+  return Math.floor(data.value.length / 10);
+});
+
+const imgload = ref(false);
+const imgArr = ref([]);
+
+const loadImg = (data) => {
+  let totalImg = 0;
+  let i = 0;
+  data.forEach((element) => {
+    if (element.picture != undefined) {
+      totalImg += 1;
+    }
+  });
+  data.forEach((element, index) => {
+    const img = new Image();
+    img.src = element.picture;
+    img.onload = () => {
+      i += 1;
+      if (i === totalImg) {
+        imgload.value = true;
+        console.log("OK");
+      }
+    };
+  });
 };
 
 watch(
@@ -114,16 +147,57 @@ watch(
   </div>
   <div class="result">
     <!-- <router-view></router-view> -->
+    <!-- <div class="event">
+      <div class="card">
+        <img src="~@/assets/images/non-image.jpg" />
+
+        <div class="detail">
+          <h3>　</h3>
+          <p>　</p>
+          <p>　</p>
+          <p>　</p>
+
+          <a href="">
+            <button>活動詳情</button>
+          </a>
+        </div>
+      </div>
+      <div class="card">
+        <img src="~@/assets/images/non-image.jpg" />
+
+        <div class="detail">
+          <h3>　</h3>
+          <p>　</p>
+          <p>　</p>
+          <p>　</p>
+
+          <a href="">
+            <button>活動詳情</button>
+          </a>
+        </div>
+      </div>
+    </div> -->
     <div class="event">
-      <div v-for="item in renderData" :key="item" class="event-item">
+      <div
+        v-for="item in renderData"
+        :key="item"
+        :class="['event-item',{card: !imgload}]"
+      >
         <img v-if="item.picture" :src="item.picture" alt="" />
         <img v-else src="~@/assets/images/non-image.jpg" />
 
         <div class="detail">
-          <h3>{{ item.name }}</h3>
-          <p><span>時間</span>{{ item.startTime }} - {{ item.endTime }}</p>
-          <p><span>地點</span>{{ item.city }}</p>
-          <p>{{ item.description }}</p>
+          <h3>{{ !imgload ? "　" : item.name }}</h3>
+          <p>
+            <span>{{ !imgload ? "　" : "時間" }}</span
+            >{{ !imgload ? "　" : item.startTime }} -
+            {{ !imgload ? "　" : item.endTime }}
+          </p>
+          <p>
+            <span>{{ !imgload ? "　" : "地點" }}</span
+            >{{ !imgload ? "　" : item.city }}
+          </p>
+          <p>{{ !imgload ? "　" : item.description }}</p>
 
           <router-link :to="`/post/${item.id}`">
             <button>活動詳情</button>
@@ -133,7 +207,7 @@ watch(
     </div>
     <div class="btns">
       <button
-        v-for="(item, index) in data.length / 10"
+        v-for="(item, index) in renderButton"
         :key="item"
         @click="getPage(index)"
         :class="{ btn_select: index === idx }"
@@ -145,6 +219,105 @@ watch(
 </template>
 
 <style lang="scss">
+.card {
+  @include flexCenter(space-between, center);
+  @include size(350px, 48%);
+  min-height: 350px;
+  position: relative;
+  margin: 28px 0;
+  background: linear-gradient(
+      100deg,
+      rgba(256, 256, 256, 0) 30%,
+      rgba(256, 256, 256, 0.5) 50%,
+      rgba(256, 256, 256, 0) 30%
+    )
+    #ededed;
+  background-size: 200% 100%;
+  background-position-x: 180%;
+  animation: 2s loading ease-in-out infinite;
+  img {
+    object-fit: cover;
+    object-position: center;
+    flex: 5.5;
+    width: 50%;
+    opacity: 0;
+  }
+  .detail {
+    @include flexCenter(flex-start, space-between);
+    flex-direction: column;
+    flex: 4.5;
+    padding: 20px 16px 60px 16px;
+    line-height: 140%;
+    background-color: #fff;
+    opacity: 0.2;
+  }
+  h3 {
+    background-color: #cccccc;
+    width: 100%;
+  }
+  span {
+    background-color: #cccccc;
+    width: 100%;
+    padding-right: 8px;
+  }
+  p {
+    background-color: #cccccc;
+    width: 100%;
+  }
+  button {
+    position: absolute;
+    right: 4%;
+    bottom: 4%;
+    opacity: 0;
+  }
+}
+@keyframes loading {
+  to {
+    background-position-x: -20%;
+  }
+}
+.event-item {
+  @include flexCenter(space-between, center);
+  @include size(350px, 48%);
+  min-height: 350px;
+  position: relative;
+  background-color: #fff;
+  margin: 28px 0;
+  img {
+    object-fit: cover;
+    object-position: center;
+    flex: 5.5;
+    width: 50%;
+  }
+  .detail {
+    @include flexCenter(flex-start, space-between);
+    flex-direction: column;
+    flex: 4.5;
+    padding: 20px 16px 60px 16px;
+    line-height: 140%;
+  }
+  h3 {
+    font-weight: 700;
+    font-size: 20px;
+  }
+  span {
+    font-weight: 700;
+    padding-right: 8px;
+  }
+  button {
+    position: absolute;
+    background-color: #5b9bd5;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    padding: 8px 32px;
+    border-radius: 16px;
+    right: 4%;
+    bottom: 4%;
+  }
+}
 .banner {
   @include flexCenter(center, center);
   @include size(350px, 100%);
