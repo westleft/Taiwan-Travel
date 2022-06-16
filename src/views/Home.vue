@@ -1,31 +1,59 @@
-<script setup>
-import { ref, onMounted, reactive } from "vue";
+<script setup lang="ts">
+import {
+  apiGetActiveList,
+  apiGetScenicSpotList,
+  apiGetRestaurantList,
+} from "@/api/request";
+import { ref, onMounted, reactive, provide } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 
-import Active from "../components/home/active.vue";
-import Restaurant from "../components/home/restaurant.vue";
-import ScenicSpot from "../components/home/scenicSpot.vue";
+import Active from "@/components/home/active.vue";
+import Restaurant from "@/components/home/restaurant.vue";
+import ScenicSpot from "@/components/home/scenicSpot.vue";
 import SearchBar from "@/components/layouts/searchBar.vue";
 
+const isload = ref<boolean>(false);
+
+interface data {
+  active: object;
+  scenicSpot: object;
+  resturant: object;
+}
+const data: data = reactive({ active: {}, scenicSpot: {}, resturant: {} });
+
+onMounted(() => {
+  apiGetActiveList()
+    .then((res) => {
+      data.active = res.data;
+      return apiGetScenicSpotList();
+    })
+    .then((res) => {
+      data.scenicSpot = res.data;
+      return apiGetRestaurantList();
+    })
+    .then((res) => {
+      data.resturant = res.data;
+      isload.value = true;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+// 傳至子層
+provide("data", data);
 </script>
 
 <template>
   <div class="search-container">
-    <SearchBar class="SearchBar"/>
+    <SearchBar class="SearchBar" />
   </div>
 
-  <div class="main-content">
-    <div class="event">
-      <Active />
-    </div>
-    <a href="./page/" class="more">More</a>
-    <div class="attractions activity">
-      <ScenicSpot />
-    </div>
-    <div class="attractions resturant">
-      <Restaurant />
-    </div>
+  <div class="main-content" v-if="isload">
+    <Active />
+    <ScenicSpot />
+    <Restaurant />
   </div>
 </template>
 
@@ -101,25 +129,25 @@ import SearchBar from "@/components/layouts/searchBar.vue";
   }
 }
 
-.more {
-  position: relative;
-  text-align: right;
-  font-weight: 700;
-  font-size: 24px;
-  cursor: pointer;
-  left: 36%;
-  text-decoration: none;
-}
-.more::after {
-  content: "";
-  background-image: url("~@/assets/images/arrow.png");
-  position: relative;
-  padding: 20px 100px;
-  background-position: center;
-  background-repeat: no-repeat;
-  right: 28%;
-  top: 8px;
-}
+// .more {
+//   position: relative;
+//   text-align: right;
+//   font-weight: 700;
+//   font-size: 24px;
+//   cursor: pointer;
+//   left: 36%;
+//   text-decoration: none;
+// }
+// .more::after {
+//   content: "";
+//   background-image: url("~@/assets/images/arrow.png");
+//   position: relative;
+//   padding: 20px 100px;
+//   background-position: center;
+//   background-repeat: no-repeat;
+//   right: 28%;
+//   top: 8px;
+// }
 
 @keyframes img-display {
   0% {

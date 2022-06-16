@@ -1,17 +1,25 @@
-<script setup>
+<script setup lang="ts">
 import Select from "@/components/select.vue";
 import SearchBar from "@/components/layouts/searchBar.vue";
-import { ref, watch, onMounted, reactive, computed, onUnmounted } from "vue";
+import { ref, watch, onMounted, reactive, computed, onUnmounted, provide } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
+import {
+  apiGetActiveList,
+  apiGetScenicSpotList,
+  apiGetRestaurantList,
+  apiGetHotelList,
+} from "@/api/request";
+
+import Active from "@/components/menu/active.vue"
 
 const route = useRoute();
 const store = useStore();
 const router = useRouter();
-const banner = ref(null);
+// const banner = ref(null);
 
-// 渲染上方 Title
-const titleMap = new Map();
+// // 渲染上方 Title
+const titleMap: Map<string, string> = new Map();
 titleMap
   .set("/menu/active", "精選活動")
   .set("/menu/scenicSpot", "全台景點")
@@ -19,12 +27,12 @@ titleMap
   .set("/menu/hotel", "住宿飯店")
   .set("/menu/search", "搜尋結果");
 
-const title = computed(() => {
-  return titleMap.get(route.path);
+const title = computed((): string => {
+  return titleMap.get(route.path) as string;
 });
 
 // 渲染上方 Banner
-const bannerMap = new Map();
+const bannerMap: Map<string, string> = new Map();
 bannerMap
   .set("/menu/active", "event_bn.jpg")
   .set("/menu/scenicSpot", "explore_bn.jpg")
@@ -40,81 +48,114 @@ const bannerSrc = computed(() => {
   }
 });
 
+// onMounted(() => {
+//   getPage(0);
+// });
+
+// const data = computed(() => {
+//   if (route.path === "/menu/active") {
+//     return store.getters.getActiveList;
+//   } else if (route.path === "/menu/scenicSpot") {
+//     return store.getters.getScenicSpotList;
+//   } else if (route.path === "/menu/resturant") {
+//     return store.getters.getRestaurantList;
+//   } else if (route.path === "/menu/hotel") {
+//     return store.getters.getGetHotelList;
+//   } else if (route.path === "/menu/search") {
+//     getSearchData();
+//     return searchData.value;
+//   }
+// });
+
+// const searchData = ref();
+// const getSearchData = () => {
+//   searchData.value = store.state.Search.searchData;
+// };
+
+// const idx = ref(1);
+// const renderData = ref();
+
+// // 拿到當前頁數的 10 筆資料
+// const getPage = (index) => {
+//   try {
+//     renderData.value = data.value.slice(index, index + 10);
+//     idx.value = index;
+//     loadImg(renderData.value);
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };
+
+// // 計算按鈕數量
+// const renderButton = computed(() => {
+//   return Math.floor(data.value.length / 10);
+// });
+
+// const imgload = ref(false);
+// const imgArr = ref([]);
+
+// const loadImg = (data) => {
+//   let totalImg = 0;
+//   let i = 0;
+//   data.forEach((element) => {
+//     if (element.picture != undefined) {
+//       totalImg += 1;
+//     }
+//   });
+//   data.forEach((element, index) => {
+//     const img = new Image();
+//     img.src = element.picture;
+//     img.onload = () => {
+//       i += 1;
+//       if (i === totalImg) {
+//         imgload.value = true;
+//         console.log("OK");
+//       }
+//     };
+//   });
+// };
+
+const isload = ref<boolean>(false);
+
+interface data {
+  active: object;
+  scenicSpot: object;
+  resturant: object;
+  hotel: object;
+}
+
+const data: data = reactive({
+  active: {},
+  scenicSpot: {},
+  resturant: {},
+  hotel: {},
+});
+
 onMounted(() => {
-  getPage(0);
+  apiGetActiveList()
+    .then((res) => {
+      data.active = res.data;
+      return apiGetScenicSpotList();
+    })
+    .then((res) => {
+      data.scenicSpot = res.data;
+      return apiGetRestaurantList();
+    })
+    .then((res) => {
+      data.resturant = res.data;
+      return apiGetHotelList();
+    })
+    .then((res) => {
+      data.hotel = res.data;
+      isload.value = true;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
-const data = computed(() => {
-  if (route.path === "/menu/active") {
-    return store.getters.getActiveList;
-  } else if (route.path === "/menu/scenicSpot") {
-    return store.getters.getScenicSpotList;
-  } else if (route.path === "/menu/resturant") {
-    return store.getters.getRestaurantList;
-  } else if (route.path === "/menu/hotel") {
-    return store.getters.getGetHotelList;
-  } else if (route.path === "/menu/search") {
-    getSearchData();
-    return searchData.value;
-  }
-});
+provide("data", data)
 
-const searchData = ref();
-const getSearchData = () => {
-  searchData.value = store.state.Search.searchData;
-};
-
-const idx = ref(1);
-const renderData = ref();
-
-// 拿到當前頁數的 10 筆資料
-const getPage = (index) => {
-  try {
-    renderData.value = data.value.slice(index, index + 10);
-    idx.value = index;
-    loadImg(renderData.value);
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-// 計算按鈕數量
-const renderButton = computed(() => {
-  return Math.floor(data.value.length / 10);
-});
-
-const imgload = ref(false);
-const imgArr = ref([]);
-
-const loadImg = (data) => {
-  let totalImg = 0;
-  let i = 0;
-  data.forEach((element) => {
-    if (element.picture != undefined) {
-      totalImg += 1;
-    }
-  });
-  data.forEach((element, index) => {
-    const img = new Image();
-    img.src = element.picture;
-    img.onload = () => {
-      i += 1;
-      if (i === totalImg) {
-        imgload.value = true;
-        console.log("OK");
-      }
-    };
-  });
-};
-
-watch(
-  () => data.value,
-  () => {
-    if (route.path.includes("menu")) {
-      getPage(0);
-    }
-  }
-);
 </script>
 <template>
   <div
@@ -145,71 +186,15 @@ watch(
       <Select />
     </div>
   </div>
-  <div class="result">
-    <!-- <router-view></router-view> -->
-    <!-- <div class="event">
-      <div class="card">
-        <img src="~@/assets/images/non-image.jpg" />
-
-        <div class="detail">
-          <h3>　</h3>
-          <p>　</p>
-          <p>　</p>
-          <p>　</p>
-
-          <a href="">
-            <button>活動詳情</button>
-          </a>
-        </div>
-      </div>
-      <div class="card">
-        <img src="~@/assets/images/non-image.jpg" />
-
-        <div class="detail">
-          <h3>　</h3>
-          <p>　</p>
-          <p>　</p>
-          <p>　</p>
-
-          <a href="">
-            <button>活動詳情</button>
-          </a>
-        </div>
-      </div>
-    </div> -->
+  <div class="result" v-if="isload">
     <div class="event">
-      <div
-        v-for="item in renderData"
-        :key="item"
-        :class="['event-item',{card: !imgload}]"
-      >
-        <img v-if="item.picture" :src="item.picture" alt="" />
-        <img v-else src="~@/assets/images/non-image.jpg" />
-
-        <div class="detail">
-          <h3>{{ !imgload ? "　" : item.name }}</h3>
-          <p>
-            <span>{{ !imgload ? "　" : "時間" }}</span
-            >{{ !imgload ? "　" : item.startTime }} -
-            {{ !imgload ? "　" : item.endTime }}
-          </p>
-          <p>
-            <span>{{ !imgload ? "　" : "地點" }}</span
-            >{{ !imgload ? "　" : item.city }}
-          </p>
-          <p>{{ !imgload ? "　" : item.description }}</p>
-
-          <router-link :to="`/post/${item.id}`">
-            <button>活動詳情</button>
-          </router-link>
-        </div>
-      </div>
+      <Active />
     </div>
     <div class="btns">
+
       <button
-        v-for="(item, index) in renderButton"
+        v-for="(item, index) in 10"
         :key="item"
-        @click="getPage(index)"
         :class="{ btn_select: index === idx }"
       >
         {{ index + 1 }}
@@ -218,7 +203,7 @@ watch(
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .card {
   @include flexCenter(space-between, center);
   @include size(350px, 48%);

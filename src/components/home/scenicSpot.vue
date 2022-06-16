@@ -1,82 +1,72 @@
-<script>
-import { ref, reactive, onMounted, computed, watch } from "vue";
-import { useStore } from "vuex";
-export default {
-  setup() {
-    const store = useStore();
-    const data = computed(() => {
-      if (store.state.isload === true) {
-        return store.getters.getScenicSpotList;
-      }
-    });
+<script setup lang="ts">
+import { ref, inject } from "vue";
 
-    const sliderData = reactive({ list: {} });
-    const index = ref(0);
+const data = inject<object>("data");
+const index = ref<number>(0);
 
-    const resController = (operation) => {
-      // 判斷要增加還減少
-      operation === "+" ? index.value += 4 :index.value -= 4
-
-      // 判斷是否大於或小於原本的 data 長度
-      if(index.value < 0){
-        index.value = data.value.length -4
-      }else if(index.value >= data.value.length){
-        index.value = 0
-      }
-
-      sliderData.list = data.value.slice(index.value, index.value + 4);
-    };
-
-    onMounted(()=>{
-      if(store.state.isload === true){
-        resController("+")
-      }
-    })
-
-    watch(
-      () => store.state.isload,
-      (newValue) => {
-        if(newValue === true || data.value !== {}){
-          resController("+")
-        }
-      }
-    );
-
-    return { resController, sliderData };
-  },
+const changePage = (symbol: string): void => {
+  if (index.value === 0 && symbol === "-") return;
+  if (symbol === "+") index.value += 4;
+  else index.value -= 4;
 };
 </script>
 <template>
-
-  <h2>熱門景點</h2>
-  <div class="slider">
-    <router-link v-for="item in sliderData.list" :key="item" class="slider-item" :to="`/post/${item.id}`">
-      <img v-if="item.picture" :src="item.picture" alt="" />
-      <img v-else src="~@/assets/images/non-image.jpg" alt="" />
-      <h3>{{ item.name }}</h3>
-      <p>{{ item.city }}</p>
-    </router-link>
-  </div>
-  <button @click="resController('+')" class="attr_next btn_next"></button>
-  <button @click="resController('-')" class="attr_back btn_back"></button>
-  <router-link to="/menu/scenicSpot" class="more">
-    More
-  </router-link>
+  <section>
+    <h2>熱門景點</h2>
+    <div class="slider">
+      <router-link
+        v-for="item in data.scenicSpot.slice(index, index + 4)"
+        :key="item"
+        class="slider-item"
+        :to="`/post/${item.id}`"
+      >
+        <img
+          v-if="item.Picture.PictureUrl1"
+          :src="item.Picture.PictureUrl1"
+          :alt="item.PictureDescription1"
+        />
+        <img v-else src="@/assets/images/non-image.jpg" alt="" />
+        <h3>{{ item.ScenicSpotName }}</h3>
+        <p v-if="item.Address">{{ item.Address.slice(0, 3) }}</p>
+      </router-link>
+    </div>
+    <button class="attr_next btn_next" @click="changePage('+')"></button>
+    <button class="attr_back btn_back" @click="changePage('-')"></button>
+    <div class="read_more_container">
+      <router-link to="/menu/scenicSpot" class="more">
+        <img src="@/assets/images/ream_more.png" alt="" />
+      </router-link>
+    </div>
+  </section>
 </template>
 
-<style lang="scss">
-.attractions {
+<style lang="scss" scoped>
+section {
+  @include flexCenter(center, center);
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  h2 {
+    width: 100%;
+  }
+  .read_more_container {
+    @include flexCenter(center, flex-end);
+    width: 100%;
+    padding: 16px 0;
+  }
+}
+
+section {
   @include flexCenter(center, center);
   position: relative;
   flex-direction: column;
   width: 100%;
-  margin-bottom: 60px;
   h2 {
     width: 100%;
     text-align: center;
     font-size: 24px;
     font-weight: 700;
-    margin-bottom: 40px;
+    padding: 20px 0;
   }
   h2::before {
     content: "　";
@@ -90,7 +80,7 @@ export default {
     @include flexCenter(center, space-between);
     flex-wrap: wrap;
     position: relative;
-    width: 76%;
+    width: 100%;
     .slider-item {
       @include flexCenter(flex-start, flex-start);
       flex-direction: column;
@@ -155,10 +145,10 @@ export default {
     cursor: pointer;
   }
   .btn_next {
-    right: 8%;
+    right: -8%;
   }
   .btn_back {
-    left: 8%;
+    left: -8%;
   }
   .btn_next::after,
   .btn_back::after {

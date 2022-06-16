@@ -1,9 +1,9 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
-import Menu from '../views/Menu.vue'
-import Post from '../views/Post.vue'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import Home from '@/views/Home.vue'
+import Menu from '@/views/Menu.vue'
+import Post from '@/views/Post.vue'
 
-const routes = [
+const routes: Array<RouteRecordRaw> =  [
   {
     path: '/',
     name: 'Home',
@@ -31,10 +31,5 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
-
-// 換頁後視窗到最上面
-router.afterEach((to, from, next) => {
-	window.scrollTo(0, 0);
-});
 
 export default router
