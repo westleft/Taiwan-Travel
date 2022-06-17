@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Select from "@/components/select.vue";
 import SearchBar from "@/components/layouts/searchBar.vue";
-import { ref, watch, onMounted, reactive, computed, onUnmounted, provide } from "vue";
+import { ref, onMounted, reactive, computed, provide, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import {
@@ -9,14 +9,17 @@ import {
   apiGetScenicSpotList,
   apiGetRestaurantList,
   apiGetHotelList,
-} from "@/api/request";
+} from "@/api/index";
 
-import Active from "@/components/menu/active.vue"
+import Active from "@/components/menu/active.vue";
+import Hotel from "@/components/menu/hotel.vue";
+import Restaurant from "@/components/menu/restaurant.vue";
+import ScenicSpot from "@/components/menu/scenicSpot.vue";
+import Search from "@/components/menu/search.vue";
 
 const route = useRoute();
 const store = useStore();
 const router = useRouter();
-// const banner = ref(null);
 
 // // 渲染上方 Title
 const titleMap: Map<string, string> = new Map();
@@ -28,6 +31,7 @@ titleMap
   .set("/menu/search", "搜尋結果");
 
 const title = computed((): string => {
+  pageIndex.value = 1;
   return titleMap.get(route.path) as string;
 });
 
@@ -48,83 +52,10 @@ const bannerSrc = computed(() => {
   }
 });
 
-// onMounted(() => {
-//   getPage(0);
-// });
-
-// const data = computed(() => {
-//   if (route.path === "/menu/active") {
-//     return store.getters.getActiveList;
-//   } else if (route.path === "/menu/scenicSpot") {
-//     return store.getters.getScenicSpotList;
-//   } else if (route.path === "/menu/resturant") {
-//     return store.getters.getRestaurantList;
-//   } else if (route.path === "/menu/hotel") {
-//     return store.getters.getGetHotelList;
-//   } else if (route.path === "/menu/search") {
-//     getSearchData();
-//     return searchData.value;
-//   }
-// });
-
-// const searchData = ref();
-// const getSearchData = () => {
-//   searchData.value = store.state.Search.searchData;
-// };
-
-// const idx = ref(1);
-// const renderData = ref();
-
-// // 拿到當前頁數的 10 筆資料
-// const getPage = (index) => {
-//   try {
-//     renderData.value = data.value.slice(index, index + 10);
-//     idx.value = index;
-//     loadImg(renderData.value);
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
-
-// // 計算按鈕數量
-// const renderButton = computed(() => {
-//   return Math.floor(data.value.length / 10);
-// });
-
-// const imgload = ref(false);
-// const imgArr = ref([]);
-
-// const loadImg = (data) => {
-//   let totalImg = 0;
-//   let i = 0;
-//   data.forEach((element) => {
-//     if (element.picture != undefined) {
-//       totalImg += 1;
-//     }
-//   });
-//   data.forEach((element, index) => {
-//     const img = new Image();
-//     img.src = element.picture;
-//     img.onload = () => {
-//       i += 1;
-//       if (i === totalImg) {
-//         imgload.value = true;
-//         console.log("OK");
-//       }
-//     };
-//   });
-// };
-
+// 確認取得資料
 const isload = ref<boolean>(false);
 
-interface data {
-  active: object;
-  scenicSpot: object;
-  resturant: object;
-  hotel: object;
-}
-
-const data: data = reactive({
+const data = reactive({
   active: {},
   scenicSpot: {},
   resturant: {},
@@ -154,8 +85,30 @@ onMounted(() => {
     });
 });
 
-provide("data", data)
+provide("data", data);
 
+// 下方按鈕頁數
+const pageIndex = ref<number>(1);
+provide("pageIndex", pageIndex);
+
+// 搜尋資料
+const searchData = ref<object>([]);
+const getSearchData = (data: object) => {
+  searchData.value = data;
+  router.push({ path: "/menu/search" });
+};
+
+provide("searchData", searchData);
+
+watch(
+  () => pageIndex.value,
+  () => {
+    window.scrollTo({
+      top: 400,
+      behavior: "smooth",
+    });
+  }
+);
 </script>
 <template>
   <div
@@ -165,7 +118,7 @@ provide("data", data)
   >
     <p>{{ title }}</p>
   </div>
-  <SearchBar />
+  <SearchBar @sendData="getSearchData" />
 
   <div class="select_bar">
     <div class="inner">
@@ -188,14 +141,18 @@ provide("data", data)
   </div>
   <div class="result" v-if="isload">
     <div class="event">
-      <Active />
+      <Active v-if="title === '精選活動'" />
+      <ScenicSpot v-if="title === '全台景點'" />
+      <Restaurant v-if="title === '探索美食'" />
+      <Hotel v-if="title === '住宿飯店'" />
+      <Search v-if="title === '搜尋結果'" />
     </div>
     <div class="btns">
-
       <button
         v-for="(item, index) in 10"
         :key="item"
-        :class="{ btn_select: index === idx }"
+        :class="{ btn_select: index + 1 === pageIndex }"
+        @click="pageIndex = index + 1"
       >
         {{ index + 1 }}
       </button>

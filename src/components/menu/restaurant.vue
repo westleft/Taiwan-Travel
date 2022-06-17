@@ -6,7 +6,7 @@ const pageIndex = inject<number>("pageIndex");
 </script>
 <template>
   <div
-    v-for="item in data.active.slice(pageIndex, pageIndex + 10)"
+    v-for="item in data.resturant.slice(pageIndex, pageIndex + 10)"
     :key="item"
     class="event-item"
   >
@@ -18,14 +18,12 @@ const pageIndex = inject<number>("pageIndex");
     <img v-else src="@/assets/images/non-image.jpg" />
 
     <div class="detail">
-      <h3>{{ item.ActivityName }}</h3>
+      <h3>{{ item.RestaurantName }}</h3>
       <p>
-        <span>時間</span>{{ item.StartTime.slice(0, 10) }} -
-        {{ item.EndTime.slice(0, 10) }}
+        <span>時間</span>{{ item.OpenTime ? item.OpenTime : "尚無資訊" }}
       </p>
       <p><span>地點</span>{{ item.Address ? item.Address : "尚無資訊" }}</p>
-      <p>
-        {{ item.Description.slice(0, 40) }}
+      <p>{{ item.Description.slice(0, 40) }}
         <span v-if="item.Description.length > 40">...</span>
       </p>
 

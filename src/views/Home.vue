@@ -3,7 +3,7 @@ import {
   apiGetActiveList,
   apiGetScenicSpotList,
   apiGetRestaurantList,
-} from "@/api/request";
+} from "@/api/index";
 import { ref, onMounted, reactive, provide } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";

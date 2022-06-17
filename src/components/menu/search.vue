@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { inject } from "vue";
+import { computed, inject } from "vue";
 
-const data = inject<object>("data");
+const data = inject<string[]>("searchData");
 const pageIndex = inject<number>("pageIndex");
 </script>
 <template>
   <div
-    v-for="item in data.active.slice(pageIndex, pageIndex + 10)"
+    v-for="item in data.slice(pageIndex, pageIndex + 10)"
     :key="item"
     class="event-item"
   >
@@ -18,15 +18,16 @@ const pageIndex = inject<number>("pageIndex");
     <img v-else src="@/assets/images/non-image.jpg" />
 
     <div class="detail">
-      <h3>{{ item.ActivityName }}</h3>
+      <h3>{{ item.ScenicSpotName }}</h3>
       <p>
-        <span>時間</span>{{ item.StartTime.slice(0, 10) }} -
-        {{ item.EndTime.slice(0, 10) }}
+        <span>時間</span
+          >{{ item.OpenTime ? item.OpenTime.slice(0, 20) : "尚無資訊" }}
+          <span v-if="item.OpenTime.length > 20">...</span>
       </p>
       <p><span>地點</span>{{ item.Address ? item.Address : "尚無資訊" }}</p>
-      <p>
+      <p v-if="item.Description">
         {{ item.Description.slice(0, 40) }}
-        <span v-if="item.Description.length > 40">...</span>
+          <span v-if="item.Description.length > 40">...</span>
       </p>
 
       <router-link :to="`/post/${item.id}`">
