@@ -1,9 +1,9 @@
 import jsSHA from "jssha";
 
 export function getAuthorizationHeader() {
-    let AppID: string = '42b22f6beb5e4145b6950a6de2cfa9ae';
-    let AppKey: string = '9NjxheGMlL7TyIb7hvIkzdVtD1s';
-    let GMTString = new Date().toGMTString();
+    let AppID = '42b22f6beb5e4145b6950a6de2cfa9ae';
+    let AppKey = '9NjxheGMlL7TyIb7hvIkzdVtD1s';
+    let GMTString = new Date().toUTCString();
     let ShaObj = new jsSHA('SHA-1', 'TEXT');
     ShaObj.setHMACKey(AppKey, 'TEXT');
     ShaObj.update('x-date: ' + GMTString);

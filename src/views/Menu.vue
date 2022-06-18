@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import Select from "@/components/select.vue";
 import SearchBar from "@/components/layouts/searchBar.vue";
-import { ref, onMounted, reactive, computed, provide, watch } from "vue";
+import { ref, onMounted, reactive, computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { useStore } from "vuex";
 import {
   apiGetActiveList,
   apiGetScenicSpotList,
@@ -11,94 +10,89 @@ import {
   apiGetHotelList,
 } from "@/api/index";
 
-import Active from "@/components/menu/active.vue";
-import Hotel from "@/components/menu/hotel.vue";
-import Restaurant from "@/components/menu/restaurant.vue";
-import ScenicSpot from "@/components/menu/scenicSpot.vue";
-import Search from "@/components/menu/search.vue";
-
 const route = useRoute();
-const store = useStore();
 const router = useRouter();
-
-// // 渲染上方 Title
-const titleMap: Map<string, string> = new Map();
-titleMap
-  .set("/menu/active", "精選活動")
-  .set("/menu/scenicSpot", "全台景點")
-  .set("/menu/resturant", "探索美食")
-  .set("/menu/hotel", "住宿飯店")
-  .set("/menu/search", "搜尋結果");
-
-const title = computed((): string => {
-  pageIndex.value = 1;
-  return titleMap.get(route.path) as string;
-});
-
-// 渲染上方 Banner
-const bannerMap: Map<string, string> = new Map();
-bannerMap
-  .set("/menu/active", "event_bn.jpg")
-  .set("/menu/scenicSpot", "explore_bn.jpg")
-  .set("/menu/resturant", "restaurant_bn.jpg")
-  .set("/menu/hotel", "hotel_bn.jpg");
-
-const bannerSrc = computed(() => {
-  try {
-    const url = bannerMap.get(route.path);
-    return require(`@/assets/images/banner/${url}`);
-  } catch {
-    return require("@/assets/images/banner/event_bn.jpg");
-  }
-});
 
 // 確認取得資料
 const isload = ref<boolean>(false);
 
-const data = reactive({
-  active: {},
-  scenicSpot: {},
-  resturant: {},
-  hotel: {},
-});
+const titleData = reactive([
+  { title: "精選活動", type: "active", img: "event_bn.jpg" },
+  { title: "全台景點", type: "scenicSpot", img: "explore_bn.jpg" },
+  { title: "探索美食", type: "restaurant", img: "restaurant_bn.jpg" },
+  { title: "住宿飯店", type: "hotel", img: "hotel_bn.jpg" },
+  { title: "搜尋結果", type: "search", img: "event_bn.jpg" },
+]);
 
 onMounted(() => {
-  apiGetActiveList()
-    .then((res) => {
-      data.active = res.data;
-      return apiGetScenicSpotList();
-    })
-    .then((res) => {
-      data.scenicSpot = res.data;
-      return apiGetRestaurantList();
-    })
-    .then((res) => {
-      data.resturant = res.data;
-      return apiGetHotelList();
-    })
-    .then((res) => {
-      data.hotel = res.data;
-      isload.value = true;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  const apiUtil = new ApiUtil();
 });
 
-provide("data", data);
+class ApiUtil {
+  type: string;
+
+  constructor() {
+    this.type = route.params.type as string;
+    this.send();
+  }
+
+  send() {
+    apiGetActiveList()
+      .then((res) => {
+        data.Active = res.data;
+        return apiGetScenicSpotList();
+      })
+      .then((res) => {
+        data.ScenicSpot = res.data;
+        return apiGetRestaurantList();
+      })
+      .then((res) => {
+        data.Restaurant = res.data;
+        return apiGetHotelList();
+      })
+      .then((res) => {
+        data.Hotel = res.data;
+        isload.value = true;
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  search(text: string) {}
+}
+
+// 標題 & 背景圖片
+const banner = ref<string>("active");
+const title = computed((): string => {
+  pageIndex.value = 1;
+  let result: string = "";
+  titleData.filter((item) => {
+    if (route.params.type === item.type) {
+      result = item.title;
+      banner.value = item.type.toLowerCase();
+    }
+  });
+  return result;
+});
+
+const data = reactive({
+  Active: {},
+  ScenicSpot: {},
+  Restaurant: {},
+  Hotel: {},
+  Search: {}
+});
 
 // 下方按鈕頁數
 const pageIndex = ref<number>(1);
-provide("pageIndex", pageIndex);
 
 // 搜尋資料
-const searchData = ref<object>([]);
-const getSearchData = (data: object) => {
-  searchData.value = data;
+const getSearchData = (searchData: object) => {
+  data.Search = searchData;
   router.push({ path: "/menu/search" });
 };
-
-provide("searchData", searchData);
 
 watch(
   () => pageIndex.value,
@@ -109,43 +103,81 @@ watch(
     });
   }
 );
+
+const type = computed((): string | string[] => {
+  const t = route.params.type;
+  // 轉字首大寫
+  return t[0].toUpperCase() + t.slice(1);
+});
 </script>
+
 <template>
   <div
     class="banner"
-    ref="banner"
-    :style="{ backgroundImage: `url(${bannerSrc})` }"
+    :style="{
+      'background-image': `url(${require(`@/assets/images/banner/${banner}_bn.jpg`)})`,
+    }"
   >
     <p>{{ title }}</p>
   </div>
+
   <SearchBar @sendData="getSearchData" />
 
   <div class="select_bar">
     <div class="inner">
       <ul>
-        <li>
-          <router-link to="/menu/active">精選活動</router-link>
-        </li>
-        <li>
-          <router-link to="/menu/scenicSpot">各地景點</router-link>
-        </li>
-        <li>
-          <router-link to="/menu/resturant">探索美食</router-link>
-        </li>
-        <li>
-          <router-link to="/menu/hotel">住宿飯店</router-link>
+        <li v-for="item in titleData.slice(0, 4)" :key="item.title">
+          <router-link :to="`/menu/${item.type}`">{{ item.title }}</router-link>
         </li>
       </ul>
       <Select />
     </div>
   </div>
+
   <div class="result" v-if="isload">
     <div class="event">
-      <Active v-if="title === '精選活動'" />
-      <ScenicSpot v-if="title === '全台景點'" />
-      <Restaurant v-if="title === '探索美食'" />
-      <Hotel v-if="title === '住宿飯店'" />
-      <Search v-if="title === '搜尋結果'" />
+      <div
+        v-for="item in data[type].slice(pageIndex, pageIndex + 10)"
+        :key="item"
+        class="event-item"
+      >
+        <img
+          v-if="item.Picture.PictureUrl1"
+          :src="item.Picture.PictureUrl1"
+          :alt="item.Picture.PictureDescription1"
+        />
+        <img v-else src="@/assets/images/non-image.jpg" />
+
+        <div class="detail">
+          <h3 v-if="type === 'Active'">{{ item["ActivityName"] }}</h3>
+          <h3 v-else-if="type === 'Search'">{{ item["ScenicSpotName"] }}</h3>
+          
+          <h3 v-else>{{ item[`${type}Name`] }}</h3>
+
+          <p v-if="item.StartTime">
+            <span>時間</span>{{ item.StartTime.slice(0, 10) }} -
+            {{ item.EndTime.slice(0, 10) }}
+          </p>
+          <p v-else-if="item.OpenTime">
+            <span>時間</span>
+            {{ item.OpenTime ? item.OpenTime.slice(0, 20) : "尚無資訊" }}
+          </p>
+          <p v-else>
+            <span>時間</span>
+            尚無資訊
+          </p>
+
+          <p><span>地點</span>{{ item.Address ? item.Address : "尚無資訊" }}</p>
+          <p v-if="item.Description">
+            {{ item.Description.slice(0, 40) }}
+            <span v-if="item.Description.length > 40">...</span>
+          </p>
+
+          <router-link :to="`/post/${item[`${type}ID`]}`">
+            <button>活動詳情</button>
+          </router-link>
+        </div>
+      </div>
     </div>
     <div class="btns">
       <button
@@ -161,61 +193,17 @@ watch(
 </template>
 
 <style lang="scss" scoped>
-.card {
-  @include flexCenter(space-between, center);
-  @include size(350px, 48%);
-  min-height: 350px;
-  position: relative;
-  margin: 28px 0;
-  background: linear-gradient(
-      100deg,
-      rgba(256, 256, 256, 0) 30%,
-      rgba(256, 256, 256, 0.5) 50%,
-      rgba(256, 256, 256, 0) 30%
-    )
-    #ededed;
-  background-size: 200% 100%;
-  background-position-x: 180%;
-  animation: 2s loading ease-in-out infinite;
-  img {
-    object-fit: cover;
-    object-position: center;
-    flex: 5.5;
-    width: 50%;
-    opacity: 0;
-  }
-  .detail {
-    @include flexCenter(flex-start, space-between);
-    flex-direction: column;
-    flex: 4.5;
-    padding: 20px 16px 60px 16px;
-    line-height: 140%;
-    background-color: #fff;
-    opacity: 0.2;
-  }
-  h3 {
-    background-color: #cccccc;
-    width: 100%;
-  }
-  span {
-    background-color: #cccccc;
-    width: 100%;
-    padding-right: 8px;
-  }
+.banner {
+  @include flexCenter(center, center);
+  @include size(350px, 100%);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
   p {
-    background-color: #cccccc;
-    width: 100%;
-  }
-  button {
-    position: absolute;
-    right: 4%;
-    bottom: 4%;
-    opacity: 0;
-  }
-}
-@keyframes loading {
-  to {
-    background-position-x: -20%;
+    font-size: 4vmin;
+    color: #fff;
+    letter-spacing: 2px;
+    font-weight: 700;
   }
 }
 .event-item {
@@ -260,21 +248,6 @@ watch(
     bottom: 4%;
   }
 }
-.banner {
-  @include flexCenter(center, center);
-  @include size(350px, 100%);
-  // background-image: url("~@/assets/images/banner/event_bn.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  p {
-    font-size: 4vmin;
-    color: #fff;
-    letter-spacing: 2px;
-    font-weight: 700;
-  }
-}
-
 .select_bar {
   @include flexCenter(center, center);
   width: 100%;
@@ -340,15 +313,6 @@ watch(
   }
   .next_btn img {
     transform: rotate(180deg);
-  }
-}
-
-@keyframes img-display {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
   }
 }
 </style>

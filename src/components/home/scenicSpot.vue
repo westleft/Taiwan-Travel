@@ -18,7 +18,7 @@ const changePage = (symbol: string): void => {
         v-for="item in data.scenicSpot.slice(index, index + 4)"
         :key="item"
         class="slider-item"
-        :to="`/post/${item.id}`"
+        :to="`/post/${item.ScenicSpotID}`"
       >
         <img
           v-if="item.Picture.PictureUrl1"

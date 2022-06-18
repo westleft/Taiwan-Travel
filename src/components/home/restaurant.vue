@@ -26,7 +26,7 @@ const changePage = (symbol: string): void => {
         v-for="item in data.resturant.slice(index, index + 4)"
         :key="item"
         class="slider-item"
-        :to="`/post/${item.id}`"
+        :to="`/post/${item.RestaurantID}`"
       >
         <img
           v-if="item.Picture.PictureUrl1"

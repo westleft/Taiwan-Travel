@@ -30,7 +30,7 @@ const pageIndex = inject<number>("pageIndex");
           <span v-if="item.Description.length > 40">...</span>
       </p>
 
-      <router-link :to="`/post/${item.id}`">
+      <router-link :to="`/post/${item.ScenicSpotID}`">
         <button>活動詳情</button>
       </router-link>
     </div>

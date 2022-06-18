@@ -1,4 +1,3 @@
-
 <script setup>
 import Loading from "@/components/layouts/loading.vue";
 import { onMounted } from "vue";
@@ -25,7 +24,7 @@ onMounted(() => {
         <router-link to="/menu/scenicSpot">全台景點</router-link>
       </li>
       <li>
-        <router-link to="/menu/resturant">探索美食</router-link>
+        <router-link to="/menu/restaurant">探索美食</router-link>
       </li>
       <li>
         <router-link to="/menu/hotel">住宿飯店</router-link>

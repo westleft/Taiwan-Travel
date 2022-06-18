@@ -1,15 +1,20 @@
-<script setup>
+<script setup lang="ts">
 import { reactive, ref } from "vue";
-const isShow = ref(false);
-const inputValue = ref();
+const isShow = ref<boolean>(false);
+const inputValue = ref<string>("");
 
-const list = reactive(["熱門活動", "近期活動", "傳統節慶", "原住民活動"]);
+const list = reactive<string[]>([
+  "熱門活動",
+  "近期活動",
+  "傳統節慶",
+  "原住民活動",
+]);
 
-const handShow = () => {
+const handShow = (): void => {
   isShow.value = !isShow.value;
 };
 
-const selectItem = (item) => {
+const selectItem = (item: string) => {
   inputValue.value = item;
 };
 </script>
@@ -17,7 +22,12 @@ const selectItem = (item) => {
 <template>
   <div id="select">
     <div class="container" @click="handShow">
-      <img v-show="!isShow" class="select_icon" src="@/assets/images/select_icon.png" alt="" />
+      <img
+        v-show="!isShow"
+        class="select_icon"
+        src="@/assets/images/select_icon.png"
+        alt=""
+      />
       <input
         type="text"
         readonly

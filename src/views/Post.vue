@@ -1,160 +1,120 @@
-<script>
+<script setup lang="ts">
+import axios from "axios";
 import { useRoute } from "vue-router";
 import { watch, ref, computed, onMounted, reactive, watchEffect } from "vue";
 import { useStore } from "vuex";
-export default {
-  setup() {
-    const route = useRoute();
-    const store = useStore();
-    const data = ref({});
-    const isload = ref(true);
-    const tags = ref({});
-    const mainImg = ref();
 
-    onMounted(() => {
-      store.dispatch("Post/checkType", route.params.id);
-    });
+const route = useRoute();
+const data = ref<object>();
+const isload = ref<boolean>(false);
 
-    watch(
-      () => store.state.Post.data,
-      (newValue) => {
-        data.value = newValue;
-        mapinitMap(
-          data.value.position.PositionLat,
-          data.value.position.PositionLon
-        );
-        isload.value = false;
-        tags.value = filterTags(data.value.class);
-      }
-    );
+console.log(route.params.id);
 
-    watch(()=>route.params.id,(n)=>{
-      if(route.path.includes("post")){
-        store.dispatch("Post/checkType", n);
-      }
-    })
+class Post {
+  private readonly params: string;
+  readonly type: string;
+  constructor() {
+    this.params = route.params.id as string;
+    this.type = this.checkType();
+  }
 
-    // Google Map
-    const mapinitMap = (positionLat, positionLon) => {
-      let map = new google.maps.Map(document.getElementById("map"), {
-        center: { lat: positionLat, lng: positionLon },
-        zoom: 18,
-      });
-    };
+  private checkType(): string {
+    if (this.params.includes("C1")) {
+      return "ScenicSpot";
+    } else if (this.params.includes("C2")) {
+      return "Activity";
+    } else if (this.params.includes("C3")) {
+      return "Restaurant";
+    } else {
+      return "Hotel";
+    }
+  }
 
-    // 整理 tag
-    const filterTags = (tag) => {
-      return tag.filter((item) => {
-        return item !== "";
-      });
-    };
+  async send() {
+    try {
+      const res = await axios.get(
+        `https://ptx.transportdata.tw/MOTC/v2/Tourism/${this.type}?%24filter=${this.type}ID%20eq%20'${this.params}'&%24format=JSON`
+      );
+      data.value = res.data[0];
+      console.log(data.value);
 
-    // 控制 slider 顯示圖片
-    const sliderController = (e) => {
-      mainImg.value.src = e.target.src;
-    };
+      isload.value = true;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+}
 
-    // 產生隨機數
-    const getRandom = (x) => {
-      return Math.floor(Math.random() * x);
-    };
-
-    const recommendSliderData = computed(() => {
-      if (store.state.isload === true) {
-        return store.getters["getActiveList"];
-      }
-    });
-
-    const sliderData = reactive({ list: {} });
-
-    // 下方 slider
-    const renderData = () => {
-      for (let i = 0; i < 3; i++) {
-        const num = getRandom(recommendSliderData.value.length);
-        sliderData.list[i] = recommendSliderData.value[num];
-      }
-    };
-
-    watchEffect(()=>{
-      if(recommendSliderData.value) {
-        renderData()
-      }
-    })
-    
-
-    return {
-      data,
-      isload,
-      tags,
-      mainImg,
-      sliderController,
-      recommendSliderData,
-      sliderData,
-      renderData,
-    };
-  },
-};
+const post = new Post();
+post.send();
 </script>
 <template>
-  <section>
+  <section v-if="isload">
     <div class="wrap">
       <div class="slider">
-        <div class="main-img" v-if="!isload">
+        <div class="main-img">
           <img
             ref="mainImg"
-            v-if="data.picture.PictureUrl1"
-            :src="data.picture.PictureUrl1"
+            v-if="data.Picture.PictureUrl1"
+            :src="data.Picture.PictureUrl1"
           />
           <img v-else src="~@/assets/images/non-image.jpg" />
         </div>
-        <div class="preview-imgs" v-if="!isload">
+        <div class="preview-imgs">
           <img
-            v-if="data.picture.PictureUrl1"
-            :src="data.picture.PictureUrl1"
+            v-if="data.Picture.PictureUrl1"
+            :src="data.Picture.PictureUrl1"
             @click="sliderController"
           />
           <img v-else src="~@/assets/images/non-image.jpg" />
           <img
-            v-if="data.picture.PictureUrl2"
-            :src="data.picture.PictureUrl2"
+            v-if="data.Picture.PictureUrl2"
+            :src="data.Picture.PictureUrl2"
             @click="sliderController"
           />
           <img v-else src="~@/assets/images/non-image.jpg" />
           <img
-            v-if="data.picture.PictureUrl3"
-            :src="data.picture.PictureUrl3"
+            v-if="data.Picture.PictureUrl3"
+            :src="data.Picture.PictureUrl3"
             @click="sliderController"
           />
           <img v-else src="~@/assets/images/non-image.jpg" />
         </div>
       </div>
       <div class="content">
-        <h1>{{ data.name }}</h1>
+        <h1>{{ data[`${post.type}Name`] }}</h1>
         <p class="tag">
-          <span v-for="tag in tags" :key="tag"># {{ tag }}</span>
+          <span v-if="data.Class1"># {{ data.Class1 }}</span>
+          <span v-if="data.Class2"># {{ data.Class2 }}</span>
         </p>
         <p>
           <span>關於</span><br />
-          {{ data.description }}
+          {{ data.Description }}
         </p>
-        <p>
+        <p v-if="data.TicketInfo">
           <span>開放時間</span><br />
-          {{ data.openTime }}
+          {{ data.OpenTime ? data.OpenTime : "暫無資訊" }}
+        </p>
+        <p v-else-if="data.StartTime">
+          <span>票價資訊</span><br />
+          {{ data.StartTime.slice(0, 10) }} - {{ data.EndTime.slice(0, 10) }}
         </p>
         <p>
           <span>票價資訊</span><br />
-          {{ data.ticketInfo }}
+          {{ data.TicketInfo ? data.TicketInfo : "暫無票價資訊" }}
         </p>
         <p>
           <span>地址</span><br />
-          {{ data.address }}
+          {{ data.Address }}
         </p>
-        <a :href="data.websiteUrl" target="_blank">官方網站</a>
+        <a v-if="data.WebsiteUrl" :href="data.WebsiteUrl" target="_blank"
+          >官方網站</a
+        >
       </div>
       <div class="transport">
         <h2>交通資訊</h2>
         <p>
-          {{ data.travelInfo }}
+          {{ data.TravelInfo ? data.TravelInfo : "暫無資訊" }}
         </p>
       </div>
       <div class="map">
@@ -163,7 +123,7 @@ export default {
     </div>
   </section>
 
-  <div class="recommend-slider">
+  <!-- <div class="recommend-slider">
     <div class="wrap">
       <h2>其他推薦</h2>
       <div class="slider">
@@ -179,7 +139,7 @@ export default {
       <button class="btn_back" @click="renderData"></button>
       <button class="btn_next" @click="renderData"></button>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <style lang="scss" scoped>

@@ -37,7 +37,7 @@ const getRandomNumber = (): void => {
         </p>
         <p><span>地點</span>{{ item.Address }}</p>
         <p>{{ item.Description.slice(0, 28) }} ...</p>
-        <router-link :to="`/post/${item.id}`">
+        <router-link :to="`/post/${item.ActivityID}`">
           <button>活動詳情</button>
         </router-link>
       </div>

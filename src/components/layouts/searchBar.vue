@@ -11,8 +11,6 @@ const search = async () => {
     const res = await apiGetSearch(searchText.value);
     searchData.value = res.data;
     emit("sendData", searchData.value)
-    // console.log(data.value);
-    
   } catch (err) {
     console.log(err);
   }

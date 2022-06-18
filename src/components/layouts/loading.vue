@@ -1,19 +1,5 @@
 <script setup>
-import { ref, watch } from "vue";
-import { useStore } from "vuex";
 
-const store = useStore();
-const isShow = ref(true);
-console.log(store.state.isload);
-
-watch(
-  () => store.state.isload,
-  (newValue) => {
-    if (newValue === true) {
-      isShow.value = false;
-    }
-  }
-);
 </script>
 <template>
   <Transition name="fade">
