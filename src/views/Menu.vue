@@ -8,6 +8,7 @@ import {
   apiGetScenicSpotList,
   apiGetRestaurantList,
   apiGetHotelList,
+  apiGetSearch,
 } from "@/api/index";
 
 const route = useRoute();
@@ -25,7 +26,12 @@ const titleData = reactive([
 ]);
 
 onMounted(() => {
-  const apiUtil = new ApiUtil();
+  new ApiUtil();
+  console.log(route.query);
+
+  if (route.params.type === "search") {
+    ApiUtil.search(route.query["q"] as string);
+  }
 });
 
 class ApiUtil {
@@ -53,14 +59,19 @@ class ApiUtil {
       .then((res) => {
         data.Hotel = res.data;
         isload.value = true;
-        console.log(data);
+        // console.log(data);
       })
       .catch((err) => {
         console.log(err);
       });
   }
 
-  search(text: string) {}
+  static search(city: string) {
+    apiGetSearch(city).then((res) => {
+      data.Search = res.data;
+      console.log(data.Search);
+    });
+  }
 }
 
 // 標題 & 背景圖片
@@ -82,11 +93,19 @@ const data = reactive({
   ScenicSpot: {},
   Restaurant: {},
   Hotel: {},
-  Search: {}
+  Search: {},
 });
 
 // 下方按鈕頁數
 const pageIndex = ref<number>(1);
+
+// 搜尋
+watch(()=>route.query["q"], (n)=>{
+  if (n !== undefined || n !== "") {
+      ApiUtil.search(route.query["q"] as string);
+    }
+})
+
 
 // 搜尋資料
 const getSearchData = (searchData: object) => {
@@ -120,8 +139,9 @@ const type = computed((): string | string[] => {
   >
     <p>{{ title }}</p>
   </div>
-
-  <SearchBar @sendData="getSearchData" />
+  <div class="search_bar">
+    <SearchBar />
+  </div>
 
   <div class="select_bar">
     <div class="inner">
@@ -151,7 +171,7 @@ const type = computed((): string | string[] => {
         <div class="detail">
           <h3 v-if="type === 'Active'">{{ item["ActivityName"] }}</h3>
           <h3 v-else-if="type === 'Search'">{{ item["ScenicSpotName"] }}</h3>
-          
+
           <h3 v-else>{{ item[`${type}Name`] }}</h3>
 
           <p v-if="item.StartTime">
@@ -248,6 +268,14 @@ const type = computed((): string | string[] => {
     bottom: 4%;
   }
 }
+
+.search_bar {
+  @include flexCenter(center, center);
+  width: 100%;
+  height: 200px;
+  background: $color_skin;
+}
+
 .select_bar {
   @include flexCenter(center, center);
   width: 100%;

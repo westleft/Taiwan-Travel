@@ -3,19 +3,24 @@ import axios from "axios";
 import { useRoute } from "vue-router";
 import { watch, ref, computed, onMounted, reactive, watchEffect } from "vue";
 import { useStore } from "vuex";
+import { Loader } from "@googlemaps/js-api-loader";
 
 const route = useRoute();
 const data = ref<object>();
 const isload = ref<boolean>(false);
 
-console.log(route.params.id);
-
 class Post {
   private readonly params: string;
   readonly type: string;
+  private states;
   constructor() {
     this.params = route.params.id as string;
     this.type = this.checkType();
+    this.states = {
+      google: null,
+      map: null,
+      markers: null,
+    };
   }
 
   private checkType(): string {
@@ -39,14 +44,45 @@ class Post {
       console.log(data.value);
 
       isload.value = true;
+      this.googleMapInit();
     } catch (err) {
       console.log(err);
     }
+  }
+
+  async googleMapInit() {
+    const loader = new Loader({
+      apiKey: process.env.VUE_APP_GOOGLE_MAP,
+      version: "weekly",
+      libraries: ["places"],
+      language: "zh-TW",
+    });
+    this.states.google = await loader.load();
+    this.states.map = new this.states.google.maps.Map(
+      document.getElementById("map"),
+      {
+        center: {
+          lat: data.value?.Position.PositionLat,
+          lng: data.value?.Position.PositionLon,
+        },
+        zoom: 15,
+        mapTypeControl: false,
+        fullscreenControl: false,
+        mapTypeId: "terrain",
+      }
+    );
   }
 }
 
 const post = new Post();
 post.send();
+
+const mainImage = ref<HTMLImageElement>()
+const handSliderImage = (url: string): void => {
+  if(!url) return
+  (mainImage.value as HTMLImageElement).src = url
+}
+
 </script>
 <template>
   <section v-if="isload">
@@ -54,7 +90,7 @@ post.send();
       <div class="slider">
         <div class="main-img">
           <img
-            ref="mainImg"
+            ref="mainImage"
             v-if="data.Picture.PictureUrl1"
             :src="data.Picture.PictureUrl1"
           />
@@ -64,19 +100,19 @@ post.send();
           <img
             v-if="data.Picture.PictureUrl1"
             :src="data.Picture.PictureUrl1"
-            @click="sliderController"
+            @click="handSliderImage(data.Picture.PictureUrl1)"
           />
           <img v-else src="~@/assets/images/non-image.jpg" />
           <img
             v-if="data.Picture.PictureUrl2"
             :src="data.Picture.PictureUrl2"
-            @click="sliderController"
+            @click="handSliderImage(data.Picture.PictureUrl2)"
           />
           <img v-else src="~@/assets/images/non-image.jpg" />
           <img
             v-if="data.Picture.PictureUrl3"
             :src="data.Picture.PictureUrl3"
-            @click="sliderController"
+            @click="handSliderImage(data.Picture.PictureUrl3)"
           />
           <img v-else src="~@/assets/images/non-image.jpg" />
         </div>

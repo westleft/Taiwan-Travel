@@ -66,9 +66,7 @@ provide("data", data);
   background-size: cover;
   background-repeat: no-repeat;
   overflow: hidden;
-  .SearchBar {
-    background-color: rgba(255, 255, 255, 0);
-  }
+
   input {
     @include size(56px, 40%);
     position: relative;
