@@ -4,7 +4,7 @@ import {
   apiGetScenicSpotList,
   apiGetRestaurantList,
 } from "@/api/index";
-import { ref, onMounted, reactive, provide } from "vue";
+import { ref, onMounted, reactive, provide, inject } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 

@@ -1,13 +1,5 @@
 <script setup>
 import Loading from "@/components/layouts/loading.vue";
-import { onMounted } from "vue";
-import { useStore } from "vuex";
-
-const store = useStore();
-
-onMounted(() => {
-  store.dispatch("callAllApi");
-});
 </script>
 <template>
   <!-- <Loading /> -->
